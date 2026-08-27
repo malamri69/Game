@@ -1,0 +1,24 @@
+{
+  "name": "unknown-king-server",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Authoritative game server for The Unknown King (الملك المجهول)",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit",
+    "simulate": "tsx src/simulation/run-simulation.ts"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5",
+    "tsx": "^4.16.5",
+    "@types/node": "^20.14.15"
+  }
+}

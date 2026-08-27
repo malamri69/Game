@@ -1,0 +1,37 @@
+{
+  "minPlayers": 6,
+  "maxPlayers": 10,
+  "defaultPlayers": 8,
+  "botBackfillWaitMs": 8000,
+  "disconnectGraceMs": 5000,
+  "rounds": {
+    "min": 3,
+    "max": 4
+  },
+  "timers": {
+    "roleRevealMs": 6000,
+    "eventMs": 8000,
+    "votingMs": 10000,
+    "discussionMs": 40000,
+    "secretActionMs": 15000,
+    "resolutionMs": 4000,
+    "finalDecisionMs": 15000,
+    "revealMs": 12000,
+    "rewardsMs": 8000
+  },
+  "economy": {
+    "startingGold": 100
+  },
+  "roles": {
+    "mvpRoleIds": [
+      "king",
+      "traitor",
+      "investigator",
+      "guardian",
+      "merchant",
+      "spy",
+      "commander",
+      "citizen"
+    ]
+  }
+}
