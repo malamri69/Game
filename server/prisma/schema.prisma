@@ -1,0 +1,212 @@
+// Database schema for The Unknown King (section 49).
+//
+// STATUS: designed, not yet wired into the running server. The server as
+// it stands (server/src/matchmaking, server/src/game) runs entirely
+// in-memory per docs/TECHNICAL_PLAN.md section 1 — good enough to play a
+// full match, not yet good enough to remember a player between sessions.
+// This file is the next step: persistent accounts, match history, and
+// leaderboards. Wiring it in means swapping LobbyManager's in-memory
+// userId/displayName pairing for real authenticated Users, and having
+// MatchManager emit a Match/MatchPlayer/MatchEvent/PlayerAction/Vote
+// row set when a match reaches REMATCH — nothing about the game engine
+// itself needs to change to support that.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String?  @unique
+  passwordHash String? // argon2; null for guest/anonymous accounts
+  createdAt    DateTime @default(now())
+
+  profile      Profile?
+  matchPlayers MatchPlayer[]
+  friendshipsA Friendship[]  @relation("FriendshipUserA")
+  friendshipsB Friendship[]  @relation("FriendshipUserB")
+  reportsFiled Report[]      @relation("ReportReporter")
+  reportsAbout Report[]      @relation("ReportSubject")
+}
+
+model Profile {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id])
+  displayName    String
+  avatarUrl      String?
+  level          Int      @default(1)
+  xp             Int      @default(0)
+  gold           Int      @default(0) // cosmetics currency, section 43 — never a gameplay advantage
+  createdAt      DateTime @default(now())
+
+  statistics Statistic?
+}
+
+model Season {
+  id        String    @id @default(uuid())
+  name      String
+  startsAt  DateTime
+  endsAt    DateTime?
+  matches   Match[]
+  leaderboards Leaderboard[]
+}
+
+model Match {
+  id           String   @id @default(uuid())
+  code         String
+  seasonId     String?
+  season       Season?  @relation(fields: [seasonId], references: [id])
+  totalRounds  Int
+  rngSeed      String
+  startedAt    DateTime @default(now())
+  endedAt      DateTime?
+  winnerRoleIds String[] // roleIds that satisfied evaluateWin at match end
+
+  players MatchPlayer[]
+  events  MatchEvent[]
+  actions PlayerAction[]
+  votes   Vote[]
+  alliances Alliance[]
+  deals   SecretDeal[]
+  rewards Reward[]
+}
+
+model MatchPlayer {
+  id          String  @id @default(uuid())
+  matchId     String
+  match       Match   @relation(fields: [matchId], references: [id])
+  userId      String? // null for a bot seat
+  user        User?   @relation(fields: [userId], references: [id])
+  seatId      String
+  isBot       Boolean @default(false)
+  roleId      String // revealed only after the match ends — never queried mid-match
+  finalGold   Int
+  won         Boolean
+
+  @@unique([matchId, seatId])
+}
+
+model MatchEvent {
+  id        String   @id @default(uuid())
+  matchId   String
+  match     Match    @relation(fields: [matchId], references: [id])
+  round     Int
+  eventId   String // catalog id, e.g. "palace_conspiracy"
+  chosenOptionId String?
+  createdAt DateTime @default(now())
+}
+
+model PlayerAction {
+  id           String   @id @default(uuid())
+  matchId      String
+  match        Match    @relation(fields: [matchId], references: [id])
+  round        Int
+  seatId       String
+  actionId     String
+  targetSeatId String?
+  outcomeType  String // ResolutionEventType, e.g. "attack_blocked"
+  createdAt    DateTime @default(now())
+}
+
+model Vote {
+  id        String   @id @default(uuid())
+  matchId   String
+  match     Match    @relation(fields: [matchId], references: [id])
+  round     Int
+  seatId    String
+  choiceId  String
+  createdAt DateTime @default(now())
+}
+
+model Alliance {
+  id        String   @id @default(uuid())
+  matchId   String
+  match     Match    @relation(fields: [matchId], references: [id])
+  round     Int
+  seatIdA   String
+  seatIdB   String
+  createdAt DateTime @default(now())
+}
+
+model SecretDeal {
+  id          String   @id @default(uuid())
+  matchId     String
+  match       Match    @relation(fields: [matchId], references: [id])
+  round       Int
+  fromSeatId  String
+  toSeatId    String
+  goldOffered Int
+  honored     Boolean? // null = never resolved/observable; the game never enforces this (section 23-24)
+  createdAt   DateTime @default(now())
+}
+
+model Reward {
+  id        String   @id @default(uuid())
+  matchId   String
+  match     Match    @relation(fields: [matchId], references: [id])
+  userId    String
+  xpGained  Int
+  goldGained Int
+  achievementIds String[]
+  createdAt DateTime @default(now())
+}
+
+model InventoryItem {
+  id        String   @id @default(uuid())
+  userId    String
+  itemId    String // cosmetic catalog id: avatar/frame/emote/theme/title (section 43)
+  acquiredAt DateTime @default(now())
+}
+
+model Friendship {
+  id        String   @id @default(uuid())
+  userAId   String
+  userA     User     @relation("FriendshipUserA", fields: [userAId], references: [id])
+  userBId   String
+  userB     User     @relation("FriendshipUserB", fields: [userBId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userAId, userBId])
+}
+
+model Report {
+  id          String   @id @default(uuid())
+  reporterId  String
+  reporter    User     @relation("ReportReporter", fields: [reporterId], references: [id])
+  subjectId   String
+  subject     User     @relation("ReportSubject", fields: [subjectId], references: [id])
+  matchId     String?
+  reason      String
+  createdAt   DateTime @default(now())
+}
+
+model Statistic {
+  id                String  @id @default(uuid())
+  profileId         String  @unique
+  profile           Profile @relation(fields: [profileId], references: [id])
+  wins              Int     @default(0)
+  losses            Int     @default(0)
+  matchesPlayed     Int     @default(0)
+  betrayals         Int     @default(0)
+  timesWasKing      Int     @default(0)
+  investigationsCorrect Int @default(0)
+  performanceScore  Float   @default(0) // section 45: not win-rate alone
+}
+
+model Leaderboard {
+  id        String   @id @default(uuid())
+  seasonId  String
+  season    Season   @relation(fields: [seasonId], references: [id])
+  profileId String
+  rank      Int
+  rating    Float
+  updatedAt DateTime @updatedAt
+
+  @@unique([seasonId, profileId])
+}

@@ -172,4 +172,16 @@ number, not intuition.
 
 Phase 1 Architecture (this doc) → Phase 2 Core Engine & State Machine → Phase 3 Roles → Phase 4 Events → Phase 5 Actions → Phase 6 Voting → Phase 7 AI → Phase 8 Realtime Multiplayer → Phase 9 UI (Flutter) → Phase 10 Matchmaking → Phase 11 Testing → Phase 12 Balancing → Phase 13 Polish.
 
-Each phase lands as its own commit(s); a phase is not considered done until its tests pass (section 72).
+Each phase landed as its own commit(s), tests passing before the next
+phase started (section 72). Status: Phases 1-8, 10, 12 fully implemented
+and tested (84 tests, including a real Socket.io integration test).
+Phase 9 (Flutter) is a written-but-unverified skeleton — no Flutter
+toolchain was available to build/run it, see `client/README.md`. Phase 11
+(testing) is covered throughout rather than as a separate pass — see the
+root `README.md`'s "Testing philosophy" section for what's covered.
+Phase 13 (polish/README/deployment) landed as the root `README.md`,
+`docker-compose.yml`, `server/Dockerfile`, and `server/.env.example`.
+Not built: the DB/auth/analytics layer (schema designed in
+`server/prisma/schema.prisma`, not wired into the running server), voice
+chat, cosmetics, seasons, and the extended role roster — all explicitly
+out of MVP scope per sections 6-7, 54-55.

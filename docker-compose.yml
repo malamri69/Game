@@ -1,0 +1,25 @@
+services:
+  game-server:
+    build:
+      context: ./server
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgresql://unknown_king:unknown_king@postgres:5432/unknown_king
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: unknown_king
+      POSTGRES_PASSWORD: unknown_king
+      POSTGRES_DB: unknown_king
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
