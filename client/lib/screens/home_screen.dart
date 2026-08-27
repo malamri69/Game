@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../services/socket_service.dart';
 import 'lobby_screen.dart';
 
@@ -10,7 +11,7 @@ class HomeScreen extends StatelessWidget {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) => const LobbyScreen()));
   }
 
-  void _privateRoom(BuildContext context) {
+  void _privateRoom(BuildContext context, AppStrings s) {
     showModalBottomSheet(
       context: context,
       builder: (sheetContext) => SafeArea(
@@ -25,10 +26,12 @@ class HomeScreen extends StatelessWidget {
                   SocketService.instance.createPrivateRoom();
                   Navigator.of(context).push(MaterialPageRoute(builder: (_) => const LobbyScreen()));
                 },
-                child: const Text('أنشئ غرفة'),
+                child: Text(s.createRoom),
               ),
               const SizedBox(height: 12),
               _JoinByCodeField(
+                hint: s.roomCodeHint,
+                joinLabel: s.join,
                 onJoin: (code) {
                   Navigator.pop(sheetContext);
                   SocketService.instance.joinByCode(code);
@@ -43,11 +46,12 @@ class HomeScreen extends StatelessWidget {
   }
 
   void _comingSoon(BuildContext context, String label) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$label — قريبًا')));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(label)));
   }
 
   @override
   Widget build(BuildContext context) {
+    final s = AppStrings(Localizations.localeOf(context));
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -58,13 +62,13 @@ class HomeScreen extends StatelessWidget {
               children: [
                 const Text('👑', style: TextStyle(fontSize: 56)),
                 const SizedBox(height: 24),
-                _MenuButton(label: '👑 العب الآن', onTap: () => _quickMatch(context), primary: true),
+                _MenuButton(label: s.playNow, onTap: () => _quickMatch(context), primary: true),
                 const SizedBox(height: 12),
-                _MenuButton(label: '👥 غرفة خاصة', onTap: () => _privateRoom(context)),
+                _MenuButton(label: s.privateRoom, onTap: () => _privateRoom(context, s)),
                 const SizedBox(height: 12),
-                _MenuButton(label: '🏆 التصنيف', onTap: () => _comingSoon(context, 'التصنيف')),
+                _MenuButton(label: s.leaderboard, onTap: () => _comingSoon(context, s.comingSoon(s.leaderboard))),
                 const SizedBox(height: 12),
-                _MenuButton(label: '👤 الملف الشخصي', onTap: () => _comingSoon(context, 'الملف الشخصي')),
+                _MenuButton(label: s.profile, onTap: () => _comingSoon(context, s.comingSoon(s.profile))),
               ],
             ),
           ),
@@ -93,8 +97,10 @@ class _MenuButton extends StatelessWidget {
 }
 
 class _JoinByCodeField extends StatefulWidget {
+  final String hint;
+  final String joinLabel;
   final void Function(String code) onJoin;
-  const _JoinByCodeField({required this.onJoin});
+  const _JoinByCodeField({required this.hint, required this.joinLabel, required this.onJoin});
 
   @override
   State<_JoinByCodeField> createState() => _JoinByCodeFieldState();
@@ -111,7 +117,7 @@ class _JoinByCodeFieldState extends State<_JoinByCodeField> {
           child: TextField(
             controller: _controller,
             textCapitalization: TextCapitalization.characters,
-            decoration: const InputDecoration(hintText: 'كود الغرفة (مثال: K7P9)', border: OutlineInputBorder()),
+            decoration: InputDecoration(hintText: widget.hint, border: const OutlineInputBorder()),
           ),
         ),
         const SizedBox(width: 8),
@@ -120,7 +126,7 @@ class _JoinByCodeFieldState extends State<_JoinByCodeField> {
             final code = _controller.text.trim();
             if (code.isNotEmpty) widget.onJoin(code);
           },
-          child: const Text('انضم'),
+          child: Text(widget.joinLabel),
         ),
       ],
     );

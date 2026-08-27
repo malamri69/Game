@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../models/match_state.dart';
 
 /// Section 38: avatar, name, trust indicator — never a role. Whether the
 /// seat behind this card is a bot is never surfaced (section 5).
 class PlayerCard extends StatelessWidget {
   final PublicPlayerView player;
+  final AppStrings s;
   final bool isSelf;
   final VoidCallback? onTap;
 
-  const PlayerCard({super.key, required this.player, this.isSelf = false, this.onTap});
+  const PlayerCard({super.key, required this.player, required this.s, this.isSelf = false, this.onTap});
 
   Color get _trustColor {
     switch (player.trustIndicator) {
@@ -49,8 +51,8 @@ class PlayerCard extends StatelessWidget {
                   Text('${player.gold}💰', style: const TextStyle(fontSize: 10)),
                 ],
               ),
-              if (!player.connected) const Text('انقطع', style: TextStyle(fontSize: 9, color: Colors.orangeAccent)),
-              if (!player.alive) const Text('خرج', style: TextStyle(fontSize: 9, color: Colors.redAccent)),
+              if (!player.connected) Text(s.disconnected, style: const TextStyle(fontSize: 9, color: Colors.orangeAccent)),
+              if (!player.alive) Text(s.eliminated, style: const TextStyle(fontSize: 9, color: Colors.redAccent)),
             ],
           ),
         ),

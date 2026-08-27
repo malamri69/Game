@@ -1,3 +1,5 @@
+import 'package:flutter/widgets.dart' show Locale;
+
 class LocalizedText {
   final String ar;
   final String en;
@@ -5,6 +7,12 @@ class LocalizedText {
 
   factory LocalizedText.fromJson(Map<String, dynamic> json) =>
       LocalizedText(ar: json['ar'] as String? ?? '', en: json['en'] as String? ?? '');
+
+  /// Picks the right string for the app's current language. Every role,
+  /// event, and action label the server sends already carries both (see
+  /// server/src/game/roles/types.ts#LocalizedText) — the client just
+  /// chooses which one to render, never re-fetches or re-translates.
+  String of(Locale locale) => locale.languageCode == 'ar' ? ar : en;
 }
 
 class PublicPlayerView {
@@ -103,7 +111,7 @@ class MatchStateForViewer {
   final int? remainingMs;
   final List<PublicPlayerView> players;
   final OwnRole? ownRole;
-  final LocalizedText? ownSecretInfoAr;
+  final LocalizedText? ownSecretInfo;
   final PublicEvent? currentEvent;
   final MatchResult? result;
 
@@ -115,7 +123,7 @@ class MatchStateForViewer {
     required this.remainingMs,
     required this.players,
     required this.ownRole,
-    required this.ownSecretInfoAr,
+    required this.ownSecretInfo,
     required this.currentEvent,
     required this.result,
   });
@@ -130,7 +138,7 @@ class MatchStateForViewer {
             .map((p) => PublicPlayerView.fromJson(p as Map<String, dynamic>))
             .toList(),
         ownRole: json['ownRole'] != null ? OwnRole.fromJson(json['ownRole'] as Map<String, dynamic>) : null,
-        ownSecretInfoAr: json['ownSecretInfo'] != null
+        ownSecretInfo: json['ownSecretInfo'] != null
             ? LocalizedText.fromJson(json['ownSecretInfo'] as Map<String, dynamic>)
             : null,
         currentEvent:

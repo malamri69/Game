@@ -8,6 +8,22 @@ Socket.io protocol implemented in `server/src/realtime/socket-gateway.ts` —
 field-for-field, and `lib/services/socket_service.dart` is the only file
 that touches the network.
 
+## Language (Arabic / English)
+
+Section 58: Arabic first, English second, chosen once at login. The
+toggle lives on `LoginScreen` (`lib/screens/login_screen.dart`); the
+choice is held in `lib/services/locale_service.dart` (a `ValueNotifier
+<Locale>` persisted via `shared_preferences`) and read by every screen
+through `AppStrings` (`lib/l10n/app_strings.dart`) for the client's own
+fixed UI copy. Game *content* — role names, objectives, event text,
+action labels — never needs a client-side translation table: the server
+already sends every one of those fields bilingual
+(`LocalizedText {ar, en}`, see `server/src/game/roles/types.ts`), and
+`LocalizedText.of(locale)` in `lib/models/match_state.dart` just picks
+the right one. `MaterialApp`'s `locale:` follows the same notifier, so
+Material's own RTL/LTR handling switches automatically with it — no
+manual `Directionality` needed.
+
 ## Status
 
 This was written without a Flutter/Dart toolchain available in the build

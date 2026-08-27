@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../l10n/app_strings.dart';
 import '../models/match_state.dart';
 import '../services/socket_service.dart';
 import 'home_screen.dart';
@@ -11,6 +12,8 @@ class ResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context);
+    final s = AppStrings(locale);
     final result = state.result;
     return Scaffold(
       body: SafeArea(
@@ -22,27 +25,27 @@ class ResultScreen extends StatelessWidget {
               Text(result?.youWon == true ? '🏆' : '👑', style: const TextStyle(fontSize: 64)),
               const SizedBox(height: 12),
               Text(
-                result?.youWon == true ? 'فزت! 🎉' : 'انتهت المباراة',
+                result?.youWon == true ? s.youWon : s.matchOver,
                 style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 24),
               if (state.ownRole != null)
-                Text('دورك كان: ${state.ownRole!.name.ar}', style: const TextStyle(fontSize: 16, color: Colors.grey)),
+                Text('${s.yourRoleWasPrefix}${state.ownRole!.name.of(locale)}', style: const TextStyle(fontSize: 16, color: Colors.grey)),
               const SizedBox(height: 32),
-              const Text('جاهز تنتقم؟ 😈', style: TextStyle(fontSize: 18)),
+              Text(s.readyForRevenge, style: const TextStyle(fontSize: 18)),
               const SizedBox(height: 12),
               SizedBox(
                 width: double.infinity,
                 child: FilledButton(
                   onPressed: () => SocketService.instance.requestRematch(),
-                  child: const Text('🔄 العب مرة ثانية'),
+                  child: Text(s.rematch),
                 ),
               ),
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () => Navigator.of(context)
                     .pushAndRemoveUntil(MaterialPageRoute(builder: (_) => const HomeScreen()), (route) => false),
-                child: const Text('الرئيسية'),
+                child: Text(s.home),
               ),
             ],
           ),

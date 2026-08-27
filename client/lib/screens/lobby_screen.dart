@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../l10n/app_strings.dart';
 import '../services/socket_service.dart';
 import 'match_screen.dart';
 
@@ -41,6 +42,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final s = AppStrings(Localizations.localeOf(context));
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -49,16 +51,16 @@ class _LobbyScreenState extends State<LobbyScreen> {
             children: [
               const CircularProgressIndicator(),
               const SizedBox(height: 24),
-              const Text('بانتظار اللاعبين…', style: TextStyle(fontSize: 18)),
+              Text(s.waitingForPlayers, style: const TextStyle(fontSize: 18)),
               const SizedBox(height: 8),
-              const Text('لو ما اكتمل العدد، الذكاء الاصطناعي بيكمّل المكان 🤖', style: TextStyle(color: Colors.grey)),
+              Text(s.botBackfillNote, style: const TextStyle(color: Colors.grey)),
               if (_code != null) ...[
                 const SizedBox(height: 24),
-                Text('كود الغرفة', style: Theme.of(context).textTheme.labelMedium),
+                Text(s.roomCode, style: Theme.of(context).textTheme.labelMedium),
                 GestureDetector(
                   onTap: () {
                     Clipboard.setData(ClipboardData(text: _code!));
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('تم نسخ الكود')));
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(s.codeCopied)));
                   },
                   child: Text(_code!, style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, letterSpacing: 4)),
                 ),
