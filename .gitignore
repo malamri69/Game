@@ -10,3 +10,4 @@ coverage/
 # multi-MB editor payload (regenerate with seed-canvas.mjs when needed).
 design-mockup/*.html
 !design-mockup/*.dc.html
+**/tmp-play-cli.mjs
