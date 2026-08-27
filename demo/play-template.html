@@ -1,0 +1,723 @@
+<meta charset="utf-8">
+<title>The Unknown King</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: oklch(0.15 0.02 265);
+    --bg-2: oklch(0.12 0.02 265);
+    --surface: oklch(0.21 0.025 265);
+    --surface-2: oklch(0.26 0.03 265);
+    --border: oklch(0.33 0.03 265);
+    --fg: oklch(0.95 0.01 90);
+    --muted: oklch(0.66 0.02 265);
+    --gold: oklch(0.78 0.14 85);
+    --gold-deep: oklch(0.68 0.14 80);
+    --gold-glow: oklch(0.78 0.14 85 / 0.18);
+    --ink: oklch(0.17 0.02 265);
+    --green: oklch(0.72 0.15 145);
+    --amber: oklch(0.78 0.14 85);
+    --red: oklch(0.62 0.19 25);
+    --font-display: 'Cinzel', Georgia, serif;
+    --font-body: 'Manrope', Helvetica, Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+  }
+
+  html, body {
+    margin: 0;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, var(--gold-glow), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 100%, oklch(0.3 0.03 265 / 0.5), transparent 60%),
+      var(--bg-2);
+    z-index: -1;
+  }
+
+  a { color: var(--gold); }
+  a:hover { color: var(--gold-deep); }
+
+  .stage {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .panel {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 28px;
+    box-shadow: 0 40px 100px -30px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.02);
+    min-height: 640px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+    animation: rise 500ms ease-out;
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .crown-watermark {
+    position: absolute;
+    top: 34px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0.06;
+    pointer-events: none;
+  }
+
+  /* ---------- Login ---------- */
+  .login {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 40px 32px;
+    text-align: center;
+    position: relative;
+  }
+  .login .crown-emoji { font-size: 56px; line-height: 1; }
+  .login h1 {
+    font-family: var(--font-display);
+    font-size: 26px;
+    font-weight: 700;
+    margin: 14px 0 2px;
+  }
+  .login .sub { color: var(--muted); font-size: 13px; margin-bottom: 22px; }
+  .login .rule { width: 56px; height: 1px; background: var(--border); margin-bottom: 24px; }
+  .login .hint {
+    max-width: 300px;
+    color: var(--muted);
+    font-size: 12.5px;
+    line-height: 1.7;
+    margin-top: 28px;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    max-width: 280px;
+    height: 52px;
+    border-radius: 14px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 15px;
+    text-align: center;
+    padding: 0 16px;
+  }
+  input[type="text"]:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px var(--gold-glow);
+  }
+  input[type="text"]::placeholder { color: var(--muted); }
+
+  .btn-gold {
+    width: 100%;
+    max-width: 280px;
+    height: 52px;
+    border-radius: 14px;
+    border: none;
+    background: linear-gradient(180deg, var(--gold), var(--gold-deep));
+    color: var(--ink);
+    font-family: var(--font-display);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 10px 30px -10px var(--gold-glow);
+    transition: transform 120ms ease, box-shadow 120ms ease;
+  }
+  .btn-gold:hover { transform: translateY(-1px); box-shadow: 0 14px 34px -10px oklch(0.78 0.14 85 / 0.4); }
+  .btn-gold:active { transform: translateY(0); }
+  .btn-gold:disabled { opacity: 0.5; cursor: default; transform: none; box-shadow: none; }
+  .btn-gold:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+  .error-text { color: var(--red); font-size: 13px; min-height: 16px; }
+
+  /* ---------- Match chrome ---------- */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px 12px;
+    font-size: 12.5px;
+  }
+  .topbar .round { color: var(--muted); }
+  .topbar .phase { font-family: var(--font-display); font-weight: 700; font-size: 13.5px; }
+  .topbar .timer { font-variant-numeric: tabular-nums; font-weight: 700; }
+  .topbar .timer.low { color: var(--red); }
+  .topbar .timer.ok { color: var(--gold); }
+  .divider { height: 1px; background: var(--border); margin: 0 20px; }
+
+  .middle {
+    flex: 1;
+    overflow-y: auto;
+    padding: 18px 20px;
+  }
+
+  .card {
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--surface);
+    padding: 20px 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card.role-card { text-align: center; }
+  .card.role-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 260px 140px at 50% -10%, var(--gold-glow), transparent 70%);
+  }
+  .card.role-card > * { position: relative; }
+  .role-card .eyebrow { font-size: 12.5px; color: var(--muted); }
+  .role-card .role-name { font-family: var(--font-display); font-size: 22px; font-weight: 700; margin-top: 8px; }
+  .role-card .objective { font-size: 14px; line-height: 1.7; margin-top: 10px; }
+  .role-card .ability { font-size: 12.5px; color: var(--muted); line-height: 1.7; margin-top: 6px; }
+  .role-card .secret-rule { height: 1px; background: var(--border); margin: 16px 0; }
+  .role-card .secret-label { font-size: 13px; font-weight: 700; }
+  .role-card .secret-text { font-size: 13px; margin-top: 6px; line-height: 1.7; }
+
+  .card.event-card { text-align: left; margin-bottom: 16px; }
+  .event-card .event-name { font-size: 16px; font-weight: 700; }
+  .event-card .event-desc { font-size: 13.5px; margin-top: 6px; line-height: 1.7; }
+
+  .waiting-note {
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    padding: 20px 8px;
+  }
+  .spinner {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    border: 3px solid var(--border);
+    border-top-color: var(--gold);
+    animation: spin 1s linear infinite;
+    margin: 0 auto 14px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .player-grid {
+    margin-top: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+  }
+  .pcard {
+    width: 78px;
+    padding: 9px 6px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    transition: opacity 200ms ease;
+  }
+  .pcard.dead { opacity: 0.35; }
+  .pcard .avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 14px;
+  }
+  .pcard .avatar.self { box-shadow: 0 0 0 2px var(--gold); }
+  .pcard .pname { font-size: 11px; max-width: 68px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pcard .prow { display: flex; align-items: center; gap: 4px; }
+  .pcard .dot { width: 7px; height: 7px; border-radius: 50%; }
+  .pcard .dot.green { background: var(--green); }
+  .pcard .dot.yellow { background: var(--amber); }
+  .pcard .dot.red { background: var(--red); }
+  .pcard .gold { font-size: 9.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .pcard .status { font-size: 9px; font-weight: 700; }
+  .pcard .status.out { color: var(--red); }
+
+  /* ---------- Bottom panel ---------- */
+  .bottom {
+    padding: 14px 16px 22px;
+    border-top: 1px solid var(--border);
+    min-height: 64px;
+  }
+  .chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+  .chip {
+    padding: 10px 16px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: border-color 120ms ease, background 120ms ease, color 120ms ease;
+  }
+  .chip:hover { border-color: var(--gold); }
+  .chip:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .chip.selected { border-color: var(--gold); background: var(--gold-glow); color: var(--gold); }
+  .chip:disabled { opacity: 0.4; cursor: default; }
+
+  .target-label { text-align: center; color: var(--muted); font-size: 12px; margin: 12px 0 6px; }
+  .tchip {
+    padding: 7px 13px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .tchip:hover { border-color: var(--gold); color: var(--gold); }
+  .tchip:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+  .bottom-note {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12.5px;
+    padding: 10px 0;
+  }
+
+  /* ---------- Result ---------- */
+  .result {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 32px;
+    gap: 4px;
+  }
+  .result .big-emoji { font-size: 56px; }
+  .result h2 { font-family: var(--font-display); font-size: 24px; margin: 10px 0 0; }
+  .result .role-was { color: var(--muted); font-size: 14.5px; margin-top: 20px; }
+  .result .revenge { font-size: 17px; margin-top: 30px; }
+  .result .btn-gold { margin-top: 14px; }
+  .result .home-link {
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 13.5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+  }
+  .result .home-link:hover { color: var(--fg); }
+
+  .footer-note {
+    max-width: 420px;
+    margin-top: 18px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 11.5px;
+    line-height: 1.6;
+  }
+
+  .hidden { display: none !important; }
+</style>
+
+<div class="stage">
+  <div class="panel" id="panel">
+    <!-- Login view -->
+    <div class="login" id="view-login">
+      <svg class="crown-watermark" width="220" height="165" viewBox="0 0 120 90" fill="none" stroke="var(--gold)" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M10 70 L10 40 L30 55 L45 20 L60 45 L75 20 L90 55 L110 40 L110 70 Z"/>
+        <line x1="10" y1="78" x2="110" y2="78"/>
+        <circle cx="45" cy="20" r="4" fill="var(--gold)" stroke="none"/>
+        <circle cx="60" cy="45" r="4" fill="var(--gold)" stroke="none"/>
+        <circle cx="75" cy="20" r="4" fill="var(--gold)" stroke="none"/>
+      </svg>
+      <div class="crown-emoji">👑</div>
+      <h1>The Unknown King</h1>
+      <div class="sub">A 5&ndash;8 minute game of hidden roles</div>
+      <div class="rule"></div>
+      <input type="text" id="name-input" placeholder="Your name" maxlength="20" autocomplete="off" />
+      <div class="error-text" id="login-error"></div>
+      <button class="btn-gold" id="play-btn" style="margin-top: 20px;">Enter the kingdom</button>
+      <div class="hint">You'll take one seat at a table of 8. The rest fill with AI opponents &mdash; the same engine that runs the real game, playing for real.</div>
+    </div>
+
+    <!-- Match view -->
+    <div class="hidden" id="view-match" style="flex:1; display:flex; flex-direction:column;">
+      <div class="topbar">
+        <span class="round" id="hud-round"></span>
+        <span class="phase" id="hud-phase"></span>
+        <span class="timer" id="hud-timer"></span>
+      </div>
+      <div class="divider"></div>
+      <div class="middle" id="middle"></div>
+      <div class="bottom" id="bottom"></div>
+    </div>
+
+    <!-- Result view -->
+    <div class="hidden result" id="view-result">
+      <div class="big-emoji" id="result-emoji"></div>
+      <h2 id="result-headline"></h2>
+      <div class="role-was" id="result-role"></div>
+      <div class="revenge">Ready for revenge? 😈</div>
+      <button class="btn-gold" id="rematch-btn">🔄 Rematch</button>
+      <button class="home-link" id="home-btn">Back to the gate</button>
+    </div>
+  </div>
+
+  <div class="footer-note">Running entirely in this tab &mdash; the real match engine (roles, events, voting, secret actions, AI) compiled to run client-side. No server, no account, nothing saved.</div>
+</div>
+
+<script>
+/*__ENGINE_BUNDLE__*/
+</script>
+<script>
+(function () {
+  "use strict";
+  const E = window.UnknownKingEngine;
+
+  const els = {
+    login: document.getElementById("view-login"),
+    match: document.getElementById("view-match"),
+    result: document.getElementById("view-result"),
+    nameInput: document.getElementById("name-input"),
+    loginError: document.getElementById("login-error"),
+    playBtn: document.getElementById("play-btn"),
+    hudRound: document.getElementById("hud-round"),
+    hudPhase: document.getElementById("hud-phase"),
+    hudTimer: document.getElementById("hud-timer"),
+    middle: document.getElementById("middle"),
+    bottom: document.getElementById("bottom"),
+    resultEmoji: document.getElementById("result-emoji"),
+    resultHeadline: document.getElementById("result-headline"),
+    resultRole: document.getElementById("result-role"),
+    rematchBtn: document.getElementById("rematch-btn"),
+    homeBtn: document.getElementById("home-btn")
+  };
+
+  const PHASE_LABELS = {
+    ROLE_REVEAL: "👑 Your Role",
+    EVENT: "🚨 Event",
+    DISCUSSION: "💬 Discussion",
+    VOTING: "🗳️ Voting",
+    SECRET_ACTIONS: "⚔️ Secret Actions",
+    RESOLUTION: "⏳ Resolving",
+    CONSEQUENCES: "📜 Consequences",
+    FINAL_EVENT: "🚨 Final Event",
+    FINAL_DECISION: "🗳️ Final Decision",
+    REVEAL: "👑 Reveal",
+    REWARDS: "🏆 Rewards"
+  };
+
+  const ROLE_ABILITY = {
+    king: { actionId: "royal_order", label: "👑 Royal Order" },
+    traitor: { actionId: "attack", label: "🗡️ Assassinate" },
+    investigator: { actionId: "investigate", label: "🕵️ Investigate" },
+    guardian: { actionId: "protect", label: "🛡️ Protect" },
+    merchant: { actionId: "trade", label: "⚔️ Trade" },
+    spy: { actionId: "spy", label: "🥷 Spy" },
+    commander: { actionId: "sabotage", label: "⚔️ Arrest" }
+  };
+  const OPEN_ACTIONS = [
+    { actionId: "bribe", label: "💰 Bribe" },
+    { actionId: "steal", label: "🫳 Steal" },
+    { actionId: "form_alliance", label: "🤝 Alliance" }
+  ];
+
+  const HUMAN_SEAT_ID = "seat-0";
+  let manager = null;
+  let tickHandle = null;
+  let selectedActionId = null;
+  let lastPhase = null;
+
+  function newMatch(name) {
+    const rng = new E.SecureRng();
+    const human = {
+      seatId: HUMAN_SEAT_ID,
+      userId: "you",
+      displayName: name,
+      isBot: false,
+      connected: true,
+      alive: true,
+      resources: { gold: E.gameConfig.economy.startingGold, reputation: 0 }
+    };
+    const players = E.fillWithBots([human], E.gameConfig.defaultPlayers, rng);
+    manager = new E.MatchManager(players, rng);
+    manager.start();
+    selectedActionId = null;
+    lastPhase = null;
+    if (tickHandle) clearInterval(tickHandle);
+    tickHandle = setInterval(tick, 300);
+    tick();
+  }
+
+  function tick() {
+    if (!manager) return;
+    manager.tick(Date.now());
+    render();
+  }
+
+  function esc(s) {
+    const d = document.createElement("div");
+    d.textContent = s == null ? "" : String(s);
+    return d.innerHTML;
+  }
+
+  function initials(name) {
+    return (name || "?").trim().slice(0, 1).toUpperCase();
+  }
+
+  function render() {
+    const view = E.buildMatchStateForViewer(manager, HUMAN_SEAT_ID, Date.now());
+
+    if (view.state === "REVEAL" || view.state === "REWARDS") {
+      if (view.result) {
+        showResult(view);
+        return;
+      }
+    }
+
+    showMatch();
+    renderHud(view);
+    renderMiddle(view);
+
+    // Only rebuild the interactive bottom panel when the phase actually
+    // changes. The tick loop runs every 300ms just to keep the timer
+    // live; rebuilding vote/action buttons on every tick would risk
+    // yanking a button out from under a real in-progress click.
+    const phaseChanged = view.state !== lastPhase;
+    if (phaseChanged) {
+      selectedActionId = null;
+      renderBottom(view);
+    }
+    lastPhase = view.state;
+  }
+
+  function renderHud(view) {
+    els.hudRound.textContent = "Round " + view.round + "/" + view.totalRounds;
+    els.hudPhase.textContent = PHASE_LABELS[view.state] || view.state;
+    if (view.remainingMs != null) {
+      const secs = Math.max(0, Math.ceil(view.remainingMs / 1000));
+      els.hudTimer.textContent = "⏱ " + secs + "s";
+      els.hudTimer.className = "timer " + (secs <= 5 ? "low" : "ok");
+    } else {
+      els.hudTimer.textContent = "";
+    }
+  }
+
+  function playerGridHtml(view) {
+    let html = '<div class="player-grid">';
+    for (const p of view.players) {
+      const isSelf = p.seatId === HUMAN_SEAT_ID;
+      html += '<div class="pcard' + (p.alive ? "" : " dead") + '">';
+      html += '<div class="avatar' + (isSelf ? " self" : "") + '">' + esc(initials(p.displayName)) + "</div>";
+      html += '<div class="pname">' + esc(p.displayName) + (isSelf ? " (you)" : "") + "</div>";
+      if (p.alive) {
+        html += '<div class="prow"><div class="dot ' + esc(p.trustIndicator) + '"></div><div class="gold">' + p.gold + "💰</div></div>";
+        if (!p.connected) html += '<div class="status">disconnected</div>';
+      } else {
+        html += '<div class="status out">out</div>';
+      }
+      html += "</div>";
+    }
+    html += "</div>";
+    return html;
+  }
+
+  function renderMiddle(view) {
+    let html = "";
+    if (view.state === "ROLE_REVEAL" && view.ownRole) {
+      html += '<div class="card role-card">';
+      html += '<div class="eyebrow">👑 The kingdom awakens&hellip;</div>';
+      html += '<div class="role-name">Your role: ' + esc(view.ownRole.name.en) + "</div>";
+      html += '<div class="objective">' + esc(view.ownRole.objective.en) + "</div>";
+      html += '<div class="ability">' + esc(view.ownRole.abilityDescription.en) + "</div>";
+      if (view.ownSecretInfo) {
+        html += '<div class="secret-rule"></div>';
+        html += '<div class="secret-label">Secret intel 🤫</div>';
+        html += '<div class="secret-text">' + esc(view.ownSecretInfo.en) + "</div>";
+      }
+      html += "</div>";
+    } else if (view.currentEvent) {
+      html += '<div class="card event-card">';
+      html += '<div class="event-name">' + esc(view.currentEvent.name.en) + "</div>";
+      html += '<div class="event-desc">' + esc(view.currentEvent.description.en) + "</div>";
+      html += "</div>";
+    }
+
+    if (view.state === "DISCUSSION") {
+      html += '<div class="waiting-note">The table is discussing the event. Voting opens shortly.</div>';
+    }
+    if (view.state === "RESOLUTION" || view.state === "CONSEQUENCES") {
+      html += '<div class="waiting-note"><div class="spinner"></div>Resolving the round&hellip;</div>';
+    }
+
+    html += playerGridHtml(view);
+    els.middle.innerHTML = html;
+  }
+
+  function renderBottom(view) {
+    const state = view.state;
+    if (state === "VOTING" || state === "FINAL_DECISION") {
+      renderVoting(view);
+    } else if (state === "SECRET_ACTIONS") {
+      renderActions(view);
+    } else {
+      els.bottom.innerHTML = '<div class="bottom-note">' + waitingMessage(state) + "</div>";
+    }
+  }
+
+  function waitingMessage(state) {
+    switch (state) {
+      case "ROLE_REVEAL": return "Take a moment to read your role.";
+      case "EVENT": return "A new event is unfolding&hellip;";
+      case "DISCUSSION": return "Nothing to do yet &mdash; talk it over (in your head).";
+      case "RESOLUTION": return "The results are coming in&hellip;";
+      case "CONSEQUENCES": return "The kingdom reacts&hellip;";
+      case "FINAL_EVENT": return "One last twist&hellip;";
+      default: return "Waiting on the kingdom&hellip;";
+    }
+  }
+
+  function renderVoting(view) {
+    const choices = (view.currentEvent && view.currentEvent.choices) || [];
+    let html = '<div class="chip-row">';
+    for (const c of choices) {
+      html += '<button class="chip" data-vote="' + esc(c.id) + '">' + esc(c.label.en) + "</button>";
+    }
+    html += "</div>";
+    els.bottom.innerHTML = html;
+    els.bottom.querySelectorAll("[data-vote]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        manager.submitVote(HUMAN_SEAT_ID, btn.getAttribute("data-vote"), Date.now());
+        els.bottom.querySelectorAll("[data-vote]").forEach((b) => (b.disabled = true));
+        btn.classList.add("selected");
+      });
+    });
+  }
+
+  function renderActions(view) {
+    const ownRole = view.ownRole;
+    const ability = ownRole ? ROLE_ABILITY[ownRole.roleId] : null;
+    const actions = [];
+    if (ability) actions.push(ability);
+    for (const a of OPEN_ACTIONS) actions.push(a);
+
+    let html = '<div class="chip-row" id="action-chips">';
+    for (const a of actions) {
+      const sel = a.actionId === selectedActionId ? " selected" : "";
+      html += '<button class="chip' + sel + '" data-action="' + esc(a.actionId) + '">' + esc(a.label) + "</button>";
+    }
+    html += "</div>";
+
+    if (selectedActionId) {
+      const targets = view.players.filter((p) => p.alive && p.seatId !== HUMAN_SEAT_ID);
+      html += '<div class="target-label">Choose a target:</div><div class="chip-row">';
+      for (const p of targets) {
+        html += '<button class="tchip" data-target="' + esc(p.seatId) + '">' + esc(p.displayName) + "</button>";
+      }
+      html += "</div>";
+    }
+
+    els.bottom.innerHTML = html;
+
+    els.bottom.querySelectorAll("[data-action]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        selectedActionId = btn.getAttribute("data-action");
+        renderActions(view);
+      });
+    });
+    els.bottom.querySelectorAll("[data-target]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        manager.submitAction({
+          seatId: HUMAN_SEAT_ID,
+          actionId: selectedActionId,
+          targetSeatId: btn.getAttribute("data-target"),
+          submittedAt: Date.now()
+        });
+        selectedActionId = null;
+        renderActions(view);
+        els.bottom.innerHTML = '<div class="bottom-note">Action locked in. Waiting on the rest of the table&hellip;</div>';
+      });
+    });
+  }
+
+  function showResult(view) {
+    if (tickHandle) { clearInterval(tickHandle); tickHandle = null; }
+    els.login.classList.add("hidden");
+    els.match.classList.add("hidden");
+    els.result.classList.remove("hidden");
+    const won = view.result.youWon;
+    els.resultEmoji.textContent = won ? "🏆" : "👑";
+    els.resultHeadline.textContent = won ? "You won! 🎉" : "Match over";
+    els.resultRole.textContent = view.ownRole ? "Your role was: " + view.ownRole.name.en : "";
+  }
+
+  function showMatch() {
+    els.login.classList.add("hidden");
+    els.result.classList.add("hidden");
+    els.match.classList.remove("hidden");
+  }
+
+  function showLogin() {
+    if (tickHandle) { clearInterval(tickHandle); tickHandle = null; }
+    manager = null;
+    els.match.classList.add("hidden");
+    els.result.classList.add("hidden");
+    els.login.classList.remove("hidden");
+    els.loginError.textContent = "";
+  }
+
+  els.playBtn.addEventListener("click", () => {
+    const name = els.nameInput.value.trim();
+    if (!name) {
+      els.loginError.textContent = "Enter your name first";
+      return;
+    }
+    newMatch(name);
+  });
+  els.nameInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") els.playBtn.click();
+  });
+  els.rematchBtn.addEventListener("click", () => {
+    const name = (els.nameInput.value || "Player").trim() || "Player";
+    els.result.classList.add("hidden");
+    newMatch(name);
+  });
+  els.homeBtn.addEventListener("click", showLogin);
+})();
+</script>

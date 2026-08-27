@@ -11,7 +11,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "tsc --noEmit",
-    "simulate": "tsx src/simulation/run-simulation.ts"
+    "simulate": "tsx src/simulation/run-simulation.ts",
+    "build:browser-demo": "node scripts/build-browser-demo.mjs"
   },
   "engines": {
     "node": ">=20"
@@ -23,6 +24,7 @@
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^20.14.15",
+    "esbuild": "^0.28.2",
     "socket.io-client": "^4.8.3",
     "tsx": "^4.16.5",
     "typescript": "^5.5.4",

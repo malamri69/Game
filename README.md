@@ -17,8 +17,26 @@ it" one.
   /src/simulation Bots-vs-bots balance simulator (section 63)
   /prisma         DB schema (designed, not yet wired in — see file header)
   /tests          84 tests: unit + a real Socket.io integration test
-/client           Flutter mobile client (skeleton, unverified — see client/README.md)
+/client           Flutter mobile client (see client/README.md)
+/demo             Zero-server browser demo: the real engine, playable solo against bots
 ```
+
+## Play it right now (no server, no install)
+
+```bash
+cd server
+npm install
+npm run build:browser-demo
+```
+
+Open the resulting `demo/play.html` directly in a browser. This is the
+*actual* game engine — the same `MatchManager`, roles, events, resolution
+engine, and AI the server runs — compiled to run standalone in a browser
+tab (`server/scripts/build-browser-demo.mjs`, entry point
+`server/src/browser-entry.ts`). You take one seat, bots fill the other
+seven, and every mechanic (voting, secret actions, betrayal, win
+conditions) is the real thing, not a mock. No account, no network call
+after the page loads, nothing saved between visits.
 
 ## Quick start — server
 
@@ -40,9 +58,11 @@ client flow.
 
 ## Quick start — client
 
-See `client/README.md`. Short version: no Flutter toolchain was available
-in the environment this was built in, so the Dart source is unverified —
-run `flutter pub get && flutter analyze` before trusting it.
+See `client/README.md`. Verified with a real Flutter 3.47.2 toolchain
+(`flutter analyze` clean, `flutter test` passing, `flutter build web`
+compiles) — not yet run on an actual device/emulator or against a live
+server, for lack of an Android SDK or usable browser display in the
+environment this was checked from.
 
 ## What's actually implemented (Definition of Done, section 75)
 
@@ -54,7 +74,8 @@ win conditions are evaluated per-role at the end → REMATCH carries the
 human roster into a fresh match. All of that is exercised by
 `server/tests/match-manager.test.ts` (fast, simulated clock) and
 `server/tests/integration/socket-gateway.test.ts` (real HTTP + real
-Socket.io + real client).
+Socket.io + real client). `demo/play.html` (see above) is the same claim
+made playable by hand, click by click, with no server involved.
 
 **Not implemented** (tracked gaps, not silently skipped):
 - No persistent accounts/auth/leaderboards/analytics — `server/prisma/schema.prisma`
