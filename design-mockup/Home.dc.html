@@ -1,0 +1,59 @@
+<!doctype html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400..700&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: oklch(0.16 0.02 265);
+      --surface: oklch(0.21 0.025 265);
+      --border: oklch(0.33 0.03 265);
+      --fg: oklch(0.95 0.01 90);
+      --muted: oklch(0.65 0.02 265);
+      --gold: oklch(0.78 0.14 85);
+      --gold-deep: oklch(0.68 0.14 80);
+      --ink: oklch(0.18 0.02 265);
+      --font-display: 'Reem Kufi', Tahoma, sans-serif;
+      --font-body: 'Cairo', Tahoma, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    a { color: var(--gold); } a:hover { color: var(--gold-deep); }
+  </style>
+</helmet>
+<div style="margin:0; width:390px; height:844px; background:var(--bg); font-family:var(--font-body); color:var(--fg); position:relative; overflow:hidden; border-radius:36px;">
+
+  <div style="position:absolute; inset:0; background: radial-gradient(ellipse 420px 260px at 50% 0%, oklch(0.78 0.14 85 / 0.09), transparent 70%);"></div>
+
+  <div style="position:relative; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:32px;">
+
+    <div style="font-size:52px; margin-bottom:8px;">👑</div>
+    <div style="font-family:var(--font-display); font-size:20px; font-weight:700; margin-bottom:26px;">الملك المجهول</div>
+
+    <div style="width:260px; height:56px; border-radius:16px; background:linear-gradient(180deg, var(--gold), var(--gold-deep)); display:flex; align-items:center; justify-content:center; box-shadow: 0 12px 28px -10px oklch(0.78 0.14 85 / 0.55);">
+      <span style="color:var(--ink); font-size:18px; font-weight:800; font-family:var(--font-display);">👑 العب الآن</span>
+    </div>
+
+    <div style="width:260px; height:52px; border-radius:16px; border:1.5px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center;">
+      <span style="font-size:16px; font-weight:700;">👥 غرفة خاصة</span>
+    </div>
+
+    <div style="width:260px; height:52px; border-radius:16px; border:1.5px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center;">
+      <span style="font-size:16px; font-weight:700;">🏆 التصنيف</span>
+    </div>
+
+    <div style="width:260px; height:52px; border-radius:16px; border:1.5px solid var(--border); background:var(--surface); display:flex; align-items:center; justify-content:center;">
+      <span style="font-size:16px; font-weight:700;">👤 الملف الشخصي</span>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

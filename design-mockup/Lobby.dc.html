@@ -1,0 +1,58 @@
+<!doctype html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400..700&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: oklch(0.16 0.02 265);
+      --surface: oklch(0.21 0.025 265);
+      --border: oklch(0.33 0.03 265);
+      --fg: oklch(0.95 0.01 90);
+      --muted: oklch(0.65 0.02 265);
+      --gold: oklch(0.78 0.14 85);
+      --gold-deep: oklch(0.68 0.14 80);
+      --ink: oklch(0.18 0.02 265);
+      --font-display: 'Reem Kufi', Tahoma, sans-serif;
+      --font-body: 'Cairo', Tahoma, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    a { color: var(--gold); } a:hover { color: var(--gold-deep); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</helmet>
+<div style="margin:0; width:390px; height:844px; background:var(--bg); font-family:var(--font-body); color:var(--fg); position:relative; overflow:hidden; border-radius:36px;">
+
+  <div style="position:relative; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; padding:32px;">
+
+    <div style="width:56px; height:56px; border-radius:50%; border:4px solid var(--border); border-top-color:var(--gold); animation: spin 1.1s linear infinite;"></div>
+
+    <div style="height:12px;"></div>
+    <div style="font-size:18px; font-weight:700;">بانتظار اللاعبين…</div>
+    <div style="font-size:13px; color:var(--muted); text-align:center; max-width:260px; line-height:1.7;">لو ما اكتمل العدد، الذكاء الاصطناعي بيكمّل المكان 🤖</div>
+
+    <div style="height:34px;"></div>
+
+    <div style="font-size:12px; color:var(--muted); letter-spacing:1px;">كود الغرفة</div>
+    <div style="margin-top:6px; padding:14px 30px; border-radius:16px; background:var(--surface); border:1.5px solid var(--border); display:flex; align-items:center; gap:10px;">
+      <span style="font-family:var(--font-display); font-size:32px; font-weight:700; letter-spacing:8px; color:var(--gold);" dir="ltr">K7P9</span>
+    </div>
+    <div style="margin-top:10px; font-size:12px; color:var(--muted);">اضغط لنسخ الكود ومشاركته 📋</div>
+
+    <div style="height:40px;"></div>
+    <div style="display:flex; align-items:center; gap:8px;">
+      <div style="width:8px; height:8px; border-radius:50%; background:var(--gold);"></div>
+      <div style="font-size:13px; color:var(--fg);">٣ من ٨ لاعبين دخلوا المملكة</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

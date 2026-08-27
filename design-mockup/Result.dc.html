@@ -1,0 +1,59 @@
+<!doctype html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400..700&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: oklch(0.16 0.02 265);
+      --surface: oklch(0.21 0.025 265);
+      --border: oklch(0.33 0.03 265);
+      --fg: oklch(0.95 0.01 90);
+      --muted: oklch(0.65 0.02 265);
+      --gold: oklch(0.78 0.14 85);
+      --gold-deep: oklch(0.68 0.14 80);
+      --ink: oklch(0.18 0.02 265);
+      --font-display: 'Reem Kufi', Tahoma, sans-serif;
+      --font-body: 'Cairo', Tahoma, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    a { color: var(--gold); } a:hover { color: var(--gold-deep); }
+  </style>
+</helmet>
+<div style="margin:0; width:390px; height:844px; background:var(--bg); font-family:var(--font-body); color:var(--fg); position:relative; overflow:hidden; border-radius:36px;">
+
+  <div style="position:absolute; inset:0; background: radial-gradient(ellipse 420px 320px at 50% 30%, oklch(0.78 0.14 85 / 0.14), transparent 70%);"></div>
+  <svg style="position:absolute; top:14%; left:12%; opacity:0.55;" width="10" height="10"><circle cx="5" cy="5" r="3" fill="var(--gold)"/></svg>
+  <svg style="position:absolute; top:22%; left:78%; opacity:0.5;" width="8" height="8"><circle cx="4" cy="4" r="2.5" fill="var(--gold)"/></svg>
+  <svg style="position:absolute; top:10%; left:70%; opacity:0.4;" width="6" height="6"><circle cx="3" cy="3" r="2" fill="var(--gold)"/></svg>
+  <svg style="position:absolute; top:30%; left:18%; opacity:0.4;" width="6" height="6"><circle cx="3" cy="3" r="2" fill="var(--gold)"/></svg>
+
+  <div style="position:relative; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; padding:32px;">
+
+    <div style="font-size:60px;">🏆</div>
+    <div style="font-family:var(--font-display); font-size:26px; font-weight:700; margin-top:6px;">فزت! 🎉</div>
+
+    <div style="height:22px;"></div>
+    <div style="font-size:15px; color:var(--muted);">دورك كان: التاجر</div>
+
+    <div style="height:34px;"></div>
+    <div style="font-size:18px; font-weight:700;">جاهز تنتقم؟ 😈</div>
+
+    <div style="height:14px;"></div>
+    <div style="width:280px; height:54px; border-radius:16px; background:linear-gradient(180deg, var(--gold), var(--gold-deep)); display:flex; align-items:center; justify-content:center; box-shadow: 0 12px 30px -10px oklch(0.78 0.14 85 / 0.55);">
+      <span style="color:var(--ink); font-size:16px; font-weight:800; font-family:var(--font-display);">🔄 العب مرة ثانية</span>
+    </div>
+
+    <div style="margin-top:14px; font-size:14px; color:var(--muted);">الرئيسية</div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!doctype html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400..700&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: oklch(0.16 0.02 265);
+      --surface: oklch(0.21 0.025 265);
+      --surface-2: oklch(0.27 0.03 265);
+      --border: oklch(0.33 0.03 265);
+      --fg: oklch(0.95 0.01 90);
+      --muted: oklch(0.65 0.02 265);
+      --gold: oklch(0.78 0.14 85);
+      --gold-deep: oklch(0.68 0.14 80);
+      --ink: oklch(0.18 0.02 265);
+      --green: oklch(0.72 0.15 145);
+      --amber: oklch(0.78 0.14 85);
+      --red: oklch(0.62 0.19 25);
+      --font-display: 'Reem Kufi', Tahoma, sans-serif;
+      --font-body: 'Cairo', Tahoma, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    a { color: var(--gold); } a:hover { color: var(--gold-deep); }
+    .pcard { width:72px; padding:7px 5px; border:1px solid var(--border); border-radius:12px; background:var(--surface); display:flex; flex-direction:column; align-items:center; gap:4px; }
+    .avatar { width:34px; height:34px; border-radius:50%; background:var(--surface-2); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; }
+    .pname { font-size:10.5px; max-width:62px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .chip { padding:9px 14px; border-radius:20px; border:1.5px solid var(--border); background:var(--surface); font-size:13px; font-weight:700; }
+    .chip.on { border-color:var(--gold); background: oklch(0.78 0.14 85 / 0.16); color:var(--gold); }
+    .tchip { padding:6px 12px; border-radius:16px; border:1px solid var(--border); background:var(--surface-2); font-size:12px; font-weight:600; }
+  </style>
+</helmet>
+<div style="margin:0; width:390px; height:844px; background:var(--bg); font-family:var(--font-body); color:var(--fg); position:relative; overflow:hidden; border-radius:36px; display:flex; flex-direction:column;">
+
+  <!-- top bar -->
+  <div style="display:flex; align-items:center; justify-content:space-between; padding:18px 20px 10px;">
+    <span style="font-size:12px; color:var(--muted);">جولة ٢/٤</span>
+    <span style="font-size:13px; font-weight:800; font-family:var(--font-display);">⚔️ أفعال سرية</span>
+    <span style="font-size:13px; color:var(--red); font-weight:700;">⏱ ١٢s</span>
+  </div>
+  <div style="height:1px; background:var(--border); margin:0 20px;"></div>
+
+  <!-- middle -->
+  <div style="flex:1; overflow:hidden; padding:16px 20px;">
+
+    <div style="border:1px solid var(--border); border-radius:16px; background:var(--surface); padding:16px;">
+      <div style="font-size:15px; font-weight:700;">مؤامرة داخل القصر</div>
+      <div style="margin-top:6px; font-size:13px; color:var(--fg); line-height:1.7;">🚨 فيه نشاط مشبوه داخل المملكة!</div>
+    </div>
+
+    <div style="margin-top:16px; display:flex; flex-wrap:wrap; gap:8px; justify-content:center;">
+      <div class="pcard"><div class="avatar">س</div><div class="pname">سالم</div><div style="display:flex; align-items:center; gap:3px;"><div style="width:7px;height:7px;border-radius:50%;background:var(--green);"></div><div style="font-size:9px; color:var(--muted);">١٢٠💰</div></div></div>
+      <div class="pcard"><div class="avatar">ن</div><div class="pname">نورة</div><div style="display:flex; align-items:center; gap:3px;"><div style="width:7px;height:7px;border-radius:50%;background:var(--amber);"></div><div style="font-size:9px; color:var(--muted);">٩٥💰</div></div></div>
+      <div class="pcard" style="opacity:0.4;"><div class="avatar">ف</div><div class="pname">فيصل</div><div style="font-size:8.5px; color:var(--red); font-weight:700;">خرج</div></div>
+      <div class="pcard"><div class="avatar">ع</div><div class="pname">عبير</div><div style="display:flex; align-items:center; gap:3px;"><div style="width:7px;height:7px;border-radius:50%;background:var(--red);"></div><div style="font-size:9px; color:var(--muted);">٦٠💰</div></div></div>
+      <div class="pcard" style="opacity:0.65;"><div class="avatar">خ</div><div class="pname">خالد</div><div style="font-size:8.5px; color:oklch(0.75 0.13 70); font-weight:700;">انقطع</div></div>
+      <div class="pcard"><div class="avatar">ل</div><div class="pname">لمى</div><div style="display:flex; align-items:center; gap:3px;"><div style="width:7px;height:7px;border-radius:50%;background:var(--green);"></div><div style="font-size:9px; color:var(--muted);">١٤٠💰</div></div></div>
+      <div class="pcard"><div class="avatar">م</div><div class="pname">ماجد</div><div style="display:flex; align-items:center; gap:3px;"><div style="width:7px;height:7px;border-radius:50%;background:var(--amber);"></div><div style="font-size:9px; color:var(--muted);">١٠٠💰</div></div></div>
+      <div class="pcard"><div class="avatar">ر</div><div class="pname">ريم</div><div style="display:flex; align-items:center; gap:3px;"><div style="width:7px;height:7px;border-radius:50%;background:var(--green);"></div><div style="font-size:9px; color:var(--muted);">١١٠💰</div></div></div>
+    </div>
+  </div>
+
+  <!-- bottom: secret action selection -->
+  <div style="padding:12px 16px 20px; border-top:1px solid var(--border);">
+    <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center;">
+      <div class="chip on">🗡️ اغتيال</div>
+      <div class="chip">💰 رشوة</div>
+      <div class="chip">🫳 سرقة</div>
+      <div class="chip">🤝 تحالف</div>
+    </div>
+    <div style="margin-top:12px; font-size:12px; color:var(--muted); text-align:center;">اختر لاعبًا:</div>
+    <div style="margin-top:6px; display:flex; flex-wrap:wrap; gap:6px; justify-content:center;">
+      <div class="tchip">سالم</div>
+      <div class="tchip" style="border-color:var(--gold); color:var(--gold);">نورة</div>
+      <div class="tchip">عبير</div>
+      <div class="tchip">لمى</div>
+      <div class="tchip">ماجد</div>
+      <div class="tchip">ريم</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

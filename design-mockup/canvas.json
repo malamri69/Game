@@ -1,0 +1,20 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 390, "h": 844, "title": "تسجيل الدخول" },
+    { "file": "Home.dc.html", "x": 490, "y": 0, "w": 390, "h": 844, "title": "الرئيسية" },
+    { "file": "Lobby.dc.html", "x": 980, "y": 0, "w": 390, "h": 844, "title": "غرفة الانتظار" },
+    { "file": "RoleReveal.dc.html", "x": 1470, "y": 0, "w": 390, "h": 844, "title": "كشف الدور" },
+    { "file": "Match.dc.html", "x": 1960, "y": 0, "w": 390, "h": 844, "title": "شاشة المباراة" },
+    { "file": "Result.dc.html", "x": 2450, "y": 0, "w": 390, "h": 844, "title": "النتيجة" }
+  ],
+  "annotations": [
+    { "id": "page-title", "x": 0, "y": -220, "w": 900, "text": "👑 الملك المجهول — تصميم الشاشات\nالتسجيل → الرئيسية → غرفة الانتظار → كشف الدور → المباراة → النتيجة" },
+    { "id": "note-main", "x": 0, "y": -80, "w": 390, "text": "Login" },
+    { "id": "note-home", "x": 490, "y": -80, "w": 390, "text": "Home" },
+    { "id": "note-lobby", "x": 980, "y": -80, "w": 390, "text": "Lobby" },
+    { "id": "note-role", "x": 1470, "y": -80, "w": 390, "text": "Role Reveal" },
+    { "id": "note-match", "x": 1960, "y": -80, "w": 390, "text": "Match (Secret Actions)" },
+    { "id": "note-result", "x": 2450, "y": -80, "w": 390, "text": "Result / Rematch" }
+  ],
+  "launch": { "view": "canvas" }
+}
