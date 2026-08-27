@@ -6,6 +6,8 @@ import '../services/socket_service.dart';
 import '../widgets/player_card.dart';
 import 'result_screen.dart';
 
+const _s = AppStrings();
+
 class MatchScreen extends StatefulWidget {
   const MatchScreen({super.key});
 
@@ -51,20 +53,16 @@ class _MatchScreenState extends State<MatchScreen> {
     if (state == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-    final locale = Localizations.localeOf(context);
-    final s = AppStrings(locale);
 
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
-            _TopBar(state: state, s: s),
+            _TopBar(state: state),
             const Divider(height: 1),
-            Expanded(child: _MiddleContent(state: state, s: s, locale: locale)),
+            Expanded(child: _MiddleContent(state: state)),
             _BottomPanel(
               state: state,
-              s: s,
-              locale: locale,
               chat: _chat,
               chatController: _chatController,
               onSendChat: () {
@@ -83,8 +81,7 @@ class _MatchScreenState extends State<MatchScreen> {
 
 class _TopBar extends StatelessWidget {
   final MatchStateForViewer state;
-  final AppStrings s;
-  const _TopBar({required this.state, required this.s});
+  const _TopBar({required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -94,8 +91,8 @@ class _TopBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(s.round(state.round, state.totalRounds), style: const TextStyle(color: Colors.grey)),
-          Text(s.phaseLabel(state.state), style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(_s.round(state.round, state.totalRounds), style: const TextStyle(color: Colors.grey)),
+          Text(_s.phaseLabel(state.state), style: const TextStyle(fontWeight: FontWeight.bold)),
           if (seconds != null)
             Text('⏱ ${seconds}s', style: TextStyle(color: seconds <= 5 ? Colors.redAccent : Colors.white)),
         ],
@@ -106,9 +103,7 @@ class _TopBar extends StatelessWidget {
 
 class _MiddleContent extends StatelessWidget {
   final MatchStateForViewer state;
-  final AppStrings s;
-  final Locale locale;
-  const _MiddleContent({required this.state, required this.s, required this.locale});
+  const _MiddleContent({required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -117,15 +112,14 @@ class _MiddleContent extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (state.state == 'ROLE_REVEAL' && state.ownRole != null) _RoleReveal(state: state, s: s, locale: locale),
-          if (state.currentEvent != null && state.state != 'ROLE_REVEAL')
-            _EventCard(event: state.currentEvent!, locale: locale),
+          if (state.state == 'ROLE_REVEAL' && state.ownRole != null) _RoleReveal(state: state),
+          if (state.currentEvent != null && state.state != 'ROLE_REVEAL') _EventCard(event: state.currentEvent!),
           const SizedBox(height: 16),
           Wrap(
             spacing: 8,
             runSpacing: 8,
             alignment: WrapAlignment.center,
-            children: state.players.map((p) => PlayerCard(player: p, s: s)).toList(),
+            children: state.players.map((p) => PlayerCard(player: p)).toList(),
           ),
         ],
       ),
@@ -135,9 +129,7 @@ class _MiddleContent extends StatelessWidget {
 
 class _RoleReveal extends StatelessWidget {
   final MatchStateForViewer state;
-  final AppStrings s;
-  final Locale locale;
-  const _RoleReveal({required this.state, required this.s, required this.locale});
+  const _RoleReveal({required this.state});
 
   @override
   Widget build(BuildContext context) {
@@ -148,18 +140,18 @@ class _RoleReveal extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
-            Text(s.kingdomAwakens, style: const TextStyle(fontSize: 16, color: Colors.grey)),
+            Text(_s.kingdomAwakens, style: const TextStyle(fontSize: 16, color: Colors.grey)),
             const SizedBox(height: 12),
-            Text('${s.yourRolePrefix}${role.name.of(locale)}', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            Text('${_s.yourRolePrefix}${role.name.en}', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Text(role.objective.of(locale), textAlign: TextAlign.center),
+            Text(role.objective.en, textAlign: TextAlign.center),
             const SizedBox(height: 8),
-            Text(role.abilityDescription.of(locale), textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
+            Text(role.abilityDescription.en, textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
             if (state.ownSecretInfo != null) ...[
               const SizedBox(height: 16),
-              Text(s.secretIntel, style: const TextStyle(fontWeight: FontWeight.bold)),
+              Text(_s.secretIntel, style: const TextStyle(fontWeight: FontWeight.bold)),
               const SizedBox(height: 4),
-              Text(state.ownSecretInfo!.of(locale), textAlign: TextAlign.center),
+              Text(state.ownSecretInfo!.en, textAlign: TextAlign.center),
             ],
           ],
         ),
@@ -170,8 +162,7 @@ class _RoleReveal extends StatelessWidget {
 
 class _EventCard extends StatelessWidget {
   final PublicEvent event;
-  final Locale locale;
-  const _EventCard({required this.event, required this.locale});
+  const _EventCard({required this.event});
 
   @override
   Widget build(BuildContext context) {
@@ -181,9 +172,9 @@ class _EventCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(event.name.of(locale), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(event.name.en, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 6),
-            Text(event.description.of(locale)),
+            Text(event.description.en),
           ],
         ),
       ),
@@ -193,20 +184,11 @@ class _EventCard extends StatelessWidget {
 
 class _BottomPanel extends StatefulWidget {
   final MatchStateForViewer state;
-  final AppStrings s;
-  final Locale locale;
   final List<Map<String, dynamic>> chat;
   final TextEditingController chatController;
   final VoidCallback onSendChat;
 
-  const _BottomPanel({
-    required this.state,
-    required this.s,
-    required this.locale,
-    required this.chat,
-    required this.chatController,
-    required this.onSendChat,
-  });
+  const _BottomPanel({required this.state, required this.chat, required this.chatController, required this.onSendChat});
 
   @override
   State<_BottomPanel> createState() => _BottomPanelState();
@@ -241,7 +223,7 @@ class _BottomPanelState extends State<_BottomPanel> {
         children: choices
             .map((c) => FilledButton(
                   onPressed: () => SocketService.instance.submitVote(c.id),
-                  child: Text(c.label.of(widget.locale)),
+                  child: Text(c.label.en),
                 ))
             .toList(),
       ),
@@ -249,12 +231,11 @@ class _BottomPanelState extends State<_BottomPanel> {
   }
 
   Widget _buildActions(MatchStateForViewer state) {
-    final s = widget.s;
     final roleActionId = state.ownRole != null ? _abilityActionIdFor(state.ownRole!.roleId) : null;
-    final roleActionLabel = roleActionId != null ? s.roleAbilityLabels[roleActionId] : null;
+    final roleActionLabel = roleActionId != null ? AppStrings.roleAbilityLabels[roleActionId] : null;
     final availableActions = <MapEntry<String, String>>[
       if (roleActionId != null && roleActionLabel != null) MapEntry(roleActionId, roleActionLabel),
-      ...s.openActionLabels.entries,
+      ...AppStrings.openActionLabels.entries,
     ];
 
     return Padding(
@@ -276,7 +257,7 @@ class _BottomPanelState extends State<_BottomPanel> {
           ),
           if (_selectedActionId != null) ...[
             const SizedBox(height: 8),
-            Text(s.pickATarget, style: const TextStyle(color: Colors.grey)),
+            Text(_s.pickATarget, style: const TextStyle(color: Colors.grey)),
             const SizedBox(height: 4),
             Wrap(
               spacing: 6,
@@ -338,7 +319,7 @@ class _BottomPanelState extends State<_BottomPanel> {
               Expanded(
                 child: TextField(
                   controller: widget.chatController,
-                  decoration: InputDecoration(hintText: widget.s.typeAMessage, border: const OutlineInputBorder()),
+                  decoration: InputDecoration(hintText: _s.typeAMessage, border: const OutlineInputBorder()),
                   onSubmitted: (_) => widget.onSendChat(),
                 ),
               ),

@@ -1,5 +1,5 @@
 name: unknown_king
-description: "الملك المجهول — The Unknown King, a 5-8 minute social deduction party game."
+description: "The Unknown King, a 5-8 minute social deduction party game."
 publish_to: "none"
 version: 0.1.0
 
@@ -10,10 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
   socket_io_client: ^2.0.3+1
-  shared_preferences: ^2.2.3
   flutter_localizations:
     sdk: flutter
-  intl: any
 
 dev_dependencies:
   flutter_test:

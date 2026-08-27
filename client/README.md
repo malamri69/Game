@@ -8,21 +8,18 @@ Socket.io protocol implemented in `server/src/realtime/socket-gateway.ts` —
 field-for-field, and `lib/services/socket_service.dart` is the only file
 that touches the network.
 
-## Language (Arabic / English)
+## Language
 
-Section 58: Arabic first, English second, chosen once at login. The
-toggle lives on `LoginScreen` (`lib/screens/login_screen.dart`); the
-choice is held in `lib/services/locale_service.dart` (a `ValueNotifier
-<Locale>` persisted via `shared_preferences`) and read by every screen
-through `AppStrings` (`lib/l10n/app_strings.dart`) for the client's own
-fixed UI copy. Game *content* — role names, objectives, event text,
-action labels — never needs a client-side translation table: the server
-already sends every one of those fields bilingual
-(`LocalizedText {ar, en}`, see `server/src/game/roles/types.ts`), and
-`LocalizedText.of(locale)` in `lib/models/match_state.dart` just picks
-the right one. `MaterialApp`'s `locale:` follows the same notifier, so
-Material's own RTL/LTR handling switches automatically with it — no
-manual `Directionality` needed.
+This client is English-only by product decision (there was a brief
+Arabic/English toggle in an earlier pass; it was removed). All fixed UI
+copy lives in `lib/l10n/app_strings.dart` — a plain `const` class, no
+locale branching. The server still sends every role/event/action string
+bilingual (`LocalizedText {ar, en}`, see `server/src/game/roles/types.ts`,
+part of the core game engine's data model), but the client's
+`LocalizedText` model (`lib/models/match_state.dart`) only parses and
+renders `.en`. Re-adding a language switch later means restoring that
+`.ar` field's use and a picker on `LoginScreen` — it's a small, contained
+change, not a rearchitecture, since the server side never dropped Arabic.
 
 ## Status
 

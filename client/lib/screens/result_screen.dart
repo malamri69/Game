@@ -10,10 +10,11 @@ class ResultScreen extends StatelessWidget {
   final MatchStateForViewer state;
   const ResultScreen({super.key, required this.state});
 
+  static const _s = AppStrings();
+
   @override
   Widget build(BuildContext context) {
-    final locale = Localizations.localeOf(context);
-    final s = AppStrings(locale);
+    const s = _s;
     final result = state.result;
     return Scaffold(
       body: SafeArea(
@@ -30,7 +31,7 @@ class ResultScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               if (state.ownRole != null)
-                Text('${s.yourRoleWasPrefix}${state.ownRole!.name.of(locale)}', style: const TextStyle(fontSize: 16, color: Colors.grey)),
+                Text('${s.yourRoleWasPrefix}${state.ownRole!.name.en}', style: const TextStyle(fontSize: 16, color: Colors.grey)),
               const SizedBox(height: 32),
               Text(s.readyForRevenge, style: const TextStyle(fontSize: 18)),
               const SizedBox(height: 12),

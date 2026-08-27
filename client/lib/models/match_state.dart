@@ -1,18 +1,13 @@
-import 'package:flutter/widgets.dart' show Locale;
-
+/// The server sends every role/event/action string bilingual
+/// (server/src/game/roles/types.ts#LocalizedText — {ar, en}) since that's
+/// core to the game engine's data model. This client is English-only by
+/// design, so it only ever reads `.en`; `ar` is parsed and kept so the
+/// JSON shape still matches, but nothing in the UI renders it.
 class LocalizedText {
-  final String ar;
   final String en;
-  const LocalizedText({required this.ar, required this.en});
+  const LocalizedText({required this.en});
 
-  factory LocalizedText.fromJson(Map<String, dynamic> json) =>
-      LocalizedText(ar: json['ar'] as String? ?? '', en: json['en'] as String? ?? '');
-
-  /// Picks the right string for the app's current language. Every role,
-  /// event, and action label the server sends already carries both (see
-  /// server/src/game/roles/types.ts#LocalizedText) — the client just
-  /// chooses which one to render, never re-fetches or re-translates.
-  String of(Locale locale) => locale.languageCode == 'ar' ? ar : en;
+  factory LocalizedText.fromJson(Map<String, dynamic> json) => LocalizedText(en: json['en'] as String? ?? '');
 }
 
 class PublicPlayerView {

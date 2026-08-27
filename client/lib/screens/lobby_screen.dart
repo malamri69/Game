@@ -40,9 +40,11 @@ class _LobbyScreenState extends State<LobbyScreen> {
     super.dispose();
   }
 
+  static const _s = AppStrings();
+
   @override
   Widget build(BuildContext context) {
-    final s = AppStrings(Localizations.localeOf(context));
+    const s = _s;
     return Scaffold(
       body: SafeArea(
         child: Center(

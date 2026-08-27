@@ -49,9 +49,11 @@ class HomeScreen extends StatelessWidget {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(label)));
   }
 
+  static const _s = AppStrings();
+
   @override
   Widget build(BuildContext context) {
-    final s = AppStrings(Localizations.localeOf(context));
+    const s = _s;
     return Scaffold(
       body: SafeArea(
         child: Center(

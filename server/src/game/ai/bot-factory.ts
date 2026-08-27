@@ -4,9 +4,7 @@ import { gameConfig } from "../../config/index.js";
 
 const PERSONALITIES: BotPersonality[] = ["politician", "aggressive", "deceiver", "coward", "opportunist", "analyst"];
 
-const BOT_DISPLAY_NAMES = [
-  "سالم", "نورة", "فيصل", "عبير", "خالد", "لمى", "ماجد", "ريم", "تركي", "هند"
-];
+const BOT_DISPLAY_NAMES = ["Cole", "Nora", "Miles", "Ivy", "Owen", "Ruby", "Silas", "Wren", "Jasper", "Freya"];
 
 /** Fills empty seats with bots (section 4/33) that are indistinguishable
  * from human seats at the type level — same Player shape, same validation
