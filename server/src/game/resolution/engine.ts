@@ -73,6 +73,7 @@ export class ResolutionEngine {
               actorSeatId: actor.seatId,
               targetSeatId: target.seatId,
               visibleTo: [actor.seatId, target.seatId],
+              actorVisible: false,
               description: { ar: "تم اعتقال لاعب — قدرته معطّلة هذه الجولة.", en: "A player was arrested — their ability is disabled this round." }
             });
             break;
@@ -86,6 +87,7 @@ export class ResolutionEngine {
               actorSeatId: actor.seatId,
               targetSeatId: target.seatId,
               visibleTo: [actor.seatId, target.seatId],
+              actorVisible: false,
               description: { ar: "تم تحصين لاعب هذه الجولة.", en: "A player was shielded this round." }
             });
             break;
@@ -101,6 +103,7 @@ export class ResolutionEngine {
                 actorSeatId: actor.seatId,
                 targetSeatId: target.seatId,
                 visibleTo: "all",
+                actorVisible: false,
                 description: { ar: "🛡️ محاولة اغتيال فشلت الليلة الماضية.", en: "🛡️ An assassination attempt failed last night." }
               });
             } else {
@@ -115,6 +118,7 @@ export class ResolutionEngine {
                 actorSeatId: actor.seatId,
                 targetSeatId: target.seatId,
                 visibleTo: "all",
+                actorVisible: false,
                 description: { ar: "🗡️ اغتيال هزّ المملكة الليلة الماضية.", en: "🗡️ An assassination has shaken the kingdom." }
               });
             }
@@ -168,8 +172,11 @@ export class ResolutionEngine {
                 type: "steal_success",
                 actorSeatId: actor.seatId,
                 targetSeatId: target.seatId,
-                visibleTo: [actor.seatId, target.seatId],
-                description: { ar: "💰 سُرق ذهب من أحد اللاعبين الليلة.", en: "💰 Gold was stolen from a player tonight." }
+                // A clean theft stays silent — only the thief knows. The
+                // victim finds out from their own gold total, not an event
+                // that would out the thief for free.
+                visibleTo: [actor.seatId],
+                description: { ar: "💰 سرقت ذهبًا ولم يلاحظ أحد.", en: "💰 You stole gold and nobody noticed." }
               });
             } else {
               actor.resources.reputation -= 1;
@@ -178,8 +185,11 @@ export class ResolutionEngine {
                 type: "steal_failed",
                 actorSeatId: actor.seatId,
                 targetSeatId: target.seatId,
-                visibleTo: [actor.seatId],
-                description: { ar: "حاولت السرقة وفشلت.", en: "You tried to steal and got nothing." }
+                // Getting caught is the dramatic, social-deduction-relevant
+                // outcome, so unlike a clean theft, the victim learns
+                // exactly who tried.
+                visibleTo: [actor.seatId, target.seatId],
+                description: { ar: "🤦 حاول أحدهم سرقتك ولكن انكشف أمره!", en: "🤦 Someone tried to steal from you and got caught!" }
               });
             }
             break;
@@ -242,6 +252,7 @@ export class ResolutionEngine {
               actorSeatId: actor.seatId,
               targetSeatId: orderTarget.seatId,
               visibleTo: "all",
+              actorVisible: false,
               description: { ar: "👑 صدر أمر ملكي جديد.", en: "👑 A new royal order has been issued." }
             });
             break;
