@@ -38,7 +38,7 @@ export const ROLE_CATALOG: Record<string, RoleDefinition> = {
     },
     abilityActionId: "investigate",
     evaluateWin: (ctx, seatId) => {
-      const correct = ctx.investigatorCorrectAccusationsBySeat.get(seatId) ?? 0;
+      const correct = ctx.intelPointsBySeat.get(seatId) ?? 0;
       return correct > 0 && !ctx.kingOverthrown;
     }
   },
@@ -71,7 +71,7 @@ export const ROLE_CATALOG: Record<string, RoleDefinition> = {
     objective: { ar: "اجمع معلومات سرية عن ثلاثة لاعبين على الأقل.", en: "Gather secret intel on at least three players." },
     abilityDescription: { ar: "راقب لاعبًا واحدًا كل جولة لكشف نشاطه.", en: "Watch one player each round to reveal their activity." },
     abilityActionId: "spy",
-    evaluateWin: (ctx, seatId) => (ctx.investigatorCorrectAccusationsBySeat.get(seatId) ?? 0) >= 3
+    evaluateWin: (ctx, seatId) => (ctx.intelPointsBySeat.get(seatId) ?? 0) >= 3
   },
   commander: {
     id: "commander",

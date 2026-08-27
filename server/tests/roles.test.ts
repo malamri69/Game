@@ -81,7 +81,7 @@ describe("win conditions", () => {
     goldBySeat: new Map<string, number>(),
     successfulTradesBySeat: new Map<string, number>(),
     traitorAchievedGoal: false,
-    investigatorCorrectAccusationsBySeat: new Map<string, number>(),
+    intelPointsBySeat: new Map<string, number>(),
     successfulProtectionsBySeat: new Map<string, number>()
   };
 

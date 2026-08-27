@@ -20,9 +20,12 @@ export interface MatchEndContext {
   /** true once the resolution engine has confirmed the traitor achieved a
    * coup/assassination/chaos win per section 6 */
   traitorAchievedGoal: boolean;
-  /** seatId of every player the investigator correctly identified as
-   * non-crown-aligned before match end */
-  investigatorCorrectAccusationsBySeat: ReadonlyMap<string, number>;
+  /** seatId -> count of "intel points": for the Investigator, correct
+   * non-crown reads; for the Spy, players successfully spied on. The same
+   * counter is reused across roles because it's always "successful info
+   * actions credited to this seat" — semantics depend on which role holds
+   * the seat. */
+  intelPointsBySeat: ReadonlyMap<string, number>;
   /** seatId -> number of times that guardian's protection actually blocked
    * a hostile action */
   successfulProtectionsBySeat: ReadonlyMap<string, number>;
