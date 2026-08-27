@@ -6,6 +6,8 @@
   "type": "module",
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "dev": "tsx watch src/index.ts",
+    "start": "node dist/index.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "tsc --noEmit",
@@ -14,11 +16,16 @@
   "engines": {
     "node": ">=20"
   },
-  "dependencies": {},
+  "dependencies": {
+    "express": "^5.2.1",
+    "socket.io": "^4.8.3"
+  },
   "devDependencies": {
-    "typescript": "^5.5.4",
-    "vitest": "^2.0.5",
+    "@types/express": "^5.0.6",
+    "@types/node": "^20.14.15",
+    "socket.io-client": "^4.8.3",
     "tsx": "^4.16.5",
-    "@types/node": "^20.14.15"
+    "typescript": "^5.5.4",
+    "vitest": "^2.0.5"
   }
 }

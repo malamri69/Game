@@ -1,7 +1,7 @@
 import { secureRng as defaultRng, type SecureRng } from "../security/rng.js";
 import { gameConfig } from "../config/index.js";
 import { MatchStateMachine } from "./state-machine/machine.js";
-import type { Match, MatchStateName, MatchTimers, Player } from "./types.js";
+import type { BotPersonality, Match, MatchStateName, MatchTimers, Player } from "./types.js";
 import { assignRoles, generateSecretInfo, type SecretInfo } from "./roles/assignment.js";
 import { getRole } from "./roles/catalog.js";
 import { buildMatchEndContext } from "./roles/win-context.js";
@@ -19,6 +19,7 @@ import { AIDecisionEngine } from "./ai/decision-engine.js";
 
 const INSTANT_STATES = new Set<MatchStateName>(["LOBBY", "MATCHMAKING", "ROLE_ASSIGNMENT", "ROUND_START", "NEXT_ROUND"]);
 const ROOM_CODE_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // no O/0, I/1 — section 34's "K7P9" style
+const FALLBACK_PERSONALITIES: BotPersonality[] = ["politician", "aggressive", "deceiver", "coward", "opportunist", "analyst"];
 
 export function generateRoomCode(rng: SecureRng, length = 4): string {
   let code = "";
@@ -157,11 +158,16 @@ export class MatchManager {
         if (!king) throw new Error("MatchManager: role assignment did not produce a King");
         this.resolutionContext = createResolutionContext(king.seatId);
 
+        // Every seat gets a knowledge model, not just bots. A human who
+        // disconnects mid-match (section 33) is played by this same AI
+        // fallback until they reconnect — the personality is just a
+        // reasonable stand-in, never shown to anyone (no seat is ever
+        // labeled "bot" in anything client-facing, section 5).
         const allSeatIds = this.match.players.map((p) => p.seatId);
         for (const p of this.match.players) {
-          if (p.isBot && p.botPersonality && p.roleId) {
-            this.aiKnowledgeBySeat.set(p.seatId, createAIKnowledge(p.seatId, p.botPersonality, p.roleId, allSeatIds));
-          }
+          if (!p.roleId) continue;
+          const personality = p.botPersonality ?? this.rng.pick(FALLBACK_PERSONALITIES);
+          this.aiKnowledgeBySeat.set(p.seatId, createAIKnowledge(p.seatId, personality, p.roleId, allSeatIds));
         }
         break;
       }
@@ -204,11 +210,16 @@ export class MatchManager {
     }
   }
 
+  /** Bots always get an AI vote; a disconnected human gets one too so the
+   * match never stalls waiting on someone who's gone (section 33) — if
+   * they reconnect before VOTING resolves, their real submitVote() call
+   * simply overwrites this placeholder (VotingSystem keeps only the
+   * latest submission per seat). */
   private submitBotVotes(): void {
     if (!this.currentEvent) return;
     const choiceIds = this.currentEvent.choices.map((c) => c.id);
     for (const p of this.alivePlayers) {
-      if (!p.isBot) continue;
+      if (!p.isBot && p.connected) continue;
       this.votingSystem.submit({ seatId: p.seatId, choiceId: this.aiEngine.decideVote(choiceIds), submittedAt: Date.now() });
     }
   }
@@ -216,7 +227,7 @@ export class MatchManager {
   private submitBotActions(): void {
     const alive = this.alivePlayers;
     for (const p of alive) {
-      if (!p.isBot || !p.roleId) continue;
+      if ((!p.isBot && p.connected) || !p.roleId) continue;
       const knowledge = this.aiKnowledgeBySeat.get(p.seatId);
       if (!knowledge) continue;
       const request = this.aiEngine.decideAction(knowledge, p, alive);
