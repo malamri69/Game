@@ -4,8 +4,12 @@
     { "file": "Home.dc.html", "x": 490, "y": 0, "w": 390, "h": 844, "title": "Home" },
     { "file": "Lobby.dc.html", "x": 980, "y": 0, "w": 390, "h": 844, "title": "Lobby" },
     { "file": "RoleReveal.dc.html", "x": 1470, "y": 0, "w": 390, "h": 844, "title": "Role Reveal" },
-    { "file": "Match.dc.html", "x": 1960, "y": 0, "w": 390, "h": 844, "title": "Match" },
-    { "file": "Result.dc.html", "x": 2450, "y": 0, "w": 390, "h": 844, "title": "Result" }
+    { "file": "Match.dc.html", "x": 1960, "y": 0, "w": 390, "h": 844, "title": "Match — Option A (Current)" },
+    { "file": "Result.dc.html", "x": 2450, "y": 0, "w": 390, "h": 844, "title": "Result" },
+
+    { "file": "MatchB.dc.html", "x": 1960, "y": 1020, "w": 390, "h": 844, "title": "Match — Option B (Round Table)" },
+    { "file": "MatchC.dc.html", "x": 2450, "y": 1020, "w": 390, "h": 844, "title": "Match — Option C (Cinematic)" },
+    { "file": "MatchD.dc.html", "x": 2940, "y": 1020, "w": 390, "h": 844, "title": "Match — Option D (Tactical Dashboard)" }
   ],
   "annotations": [
     { "id": "page-title", "x": 0, "y": -220, "w": 900, "text": "👑 The Unknown King — Screen Designs\nLogin → Home → Lobby → Role Reveal → Match → Result" },
@@ -13,8 +17,13 @@
     { "id": "note-home", "x": 490, "y": -80, "w": 390, "text": "Home" },
     { "id": "note-lobby", "x": 980, "y": -80, "w": 390, "text": "Lobby" },
     { "id": "note-role", "x": 1470, "y": -80, "w": 390, "text": "Role Reveal" },
-    { "id": "note-match", "x": 1960, "y": -80, "w": 390, "text": "Match (Secret Actions)" },
-    { "id": "note-result", "x": 2450, "y": -80, "w": 390, "text": "Result / Rematch" }
+    { "id": "note-match", "x": 1960, "y": -80, "w": 390, "text": "Match (Secret Actions) — Option A, the current build" },
+    { "id": "note-result", "x": 2450, "y": -80, "w": 390, "text": "Result / Rematch" },
+
+    { "id": "options-title", "x": 1960, "y": 900, "w": 1370, "text": "⚔️ Match screen — direction options, same content/data, four different layouts. Pick one to apply everywhere." },
+    { "id": "note-matchb", "x": 1960, "y": 995, "w": 390, "text": "B — Round Table: the lobby's table carries into the match; tap a seat to target it." },
+    { "id": "note-matchc", "x": 2450, "y": 995, "w": 390, "text": "C — Cinematic: the event is the moment; radial timer, big stacked action buttons." },
+    { "id": "note-matchd", "x": 2940, "y": 995, "w": 390, "text": "D — Tactical Dashboard: dense scoreboard-style roster, trust as a label not just a dot." }
   ],
   "launch": { "view": "canvas" }
 }

@@ -1,0 +1,156 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: oklch(0.15 0.02 265);
+      --surface: oklch(0.21 0.025 265);
+      --surface-2: oklch(0.27 0.03 265);
+      --border: oklch(0.33 0.03 265);
+      --fg: oklch(0.95 0.01 90);
+      --muted: oklch(0.66 0.02 265);
+      --gold: oklch(0.78 0.14 85);
+      --gold-deep: oklch(0.68 0.14 80);
+      --ink: oklch(0.18 0.02 265);
+      --green: oklch(0.72 0.15 145);
+      --amber: oklch(0.78 0.14 85);
+      --red: oklch(0.62 0.19 25);
+      --font-display: 'Cinzel', Georgia, serif;
+      --font-body: 'Manrope', Helvetica, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    .chip { padding:9px 14px; border-radius:20px; border:1.5px solid var(--border); background:var(--surface); font-size:13px; font-weight:700; }
+    .chip.on { border-color:var(--gold); background: oklch(0.78 0.14 85 / 0.16); color:var(--gold); }
+    .seat-name { font-size: 10.5px; font-family: var(--font-body); font-weight: 600; }
+    .seat-name.you { fill: var(--gold); font-weight: 700; }
+  </style>
+</helmet>
+<div style="margin:0; width:390px; height:844px; background:var(--bg); font-family:var(--font-body); color:var(--fg); position:relative; overflow:hidden; border-radius:36px; display:flex; flex-direction:column;">
+
+  <div style="position:absolute; inset:0; background: radial-gradient(ellipse 380px 300px at 50% 42%, oklch(0.78 0.14 85 / 0.08), transparent 65%); pointer-events:none;"></div>
+
+  <!-- top bar -->
+  <div style="position:relative; display:flex; align-items:center; justify-content:space-between; padding:18px 20px 10px;">
+    <span style="font-size:12px; color:var(--muted);">Round 2/4</span>
+    <span style="font-size:13px; font-weight:800; font-family:var(--font-display);">⚔️ Secret Actions</span>
+    <span style="font-size:13px; color:var(--red); font-weight:700;">⏱ 12s</span>
+  </div>
+
+  <!-- event, compact, above the table -->
+  <div style="position:relative; margin:6px 20px 0; border:1px solid var(--border); border-radius:14px; background:var(--surface); padding:12px 14px;">
+    <div style="font-size:13.5px; font-weight:700;">🚨 Conspiracy in the Palace</div>
+    <div style="margin-top:3px; font-size:12px; color:var(--muted);">Suspicious activity inside the kingdom!</div>
+  </div>
+
+  <!-- the table -->
+  <div style="position:relative; flex:1; display:flex; align-items:center; justify-content:center; margin-top:-8px;">
+    <svg viewBox="0 0 390 380" width="390" height="380" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="tableFill" cx="50%" cy="40%" r="65%">
+          <stop offset="0%" stop-color="oklch(0.29 0.045 55)"/>
+          <stop offset="70%" stop-color="oklch(0.22 0.04 55)"/>
+          <stop offset="100%" stop-color="oklch(0.13 0.03 50)"/>
+        </radialGradient>
+        <radialGradient id="badgeGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="oklch(0.85 0.15 85 / 0.55)"/>
+          <stop offset="100%" stop-color="oklch(0.85 0.15 85 / 0)"/>
+        </radialGradient>
+      </defs>
+
+      <ellipse cx="195" cy="200" rx="150" ry="90" fill="black" opacity="0.35" />
+      <ellipse cx="195" cy="190" rx="148" ry="88" fill="url(#tableFill)" stroke="oklch(0.42 0.06 60)" stroke-width="2" />
+      <ellipse cx="195" cy="190" rx="120" ry="68" fill="none" stroke="oklch(0.36 0.05 58)" stroke-width="1" opacity="0.55" />
+
+      <!-- center: event-in-progress badge -->
+      <circle cx="195" cy="190" r="30" fill="url(#badgeGlow)" />
+      <circle cx="195" cy="190" r="17" fill="oklch(0.19 0.02 265)" stroke="var(--border)" stroke-width="1.5" />
+      <text x="195" y="197" text-anchor="middle" font-size="16">🚨</text>
+
+      <!-- seat: Silas, theta 45 -->
+      <g transform="translate(297.5,250)">
+        <circle r="24" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5" />
+        <text x="0" y="5" text-anchor="middle" font-family="var(--font-body)" font-weight="700" font-size="14" fill="var(--fg)">S</text>
+        <circle cx="16" cy="-16" r="4.5" fill="var(--amber)" stroke="var(--bg)" stroke-width="1.5" />
+      </g>
+      <text x="297.5" y="286" text-anchor="middle" class="seat-name">Silas</text>
+
+      <!-- seat: Ivy, theta -45, SELECTED TARGET -->
+      <g transform="translate(297.5,130)">
+        <circle r="26" fill="none" stroke="var(--gold)" stroke-width="2.5" style="filter: drop-shadow(0 0 6px oklch(0.78 0.14 85 / 0.6));" />
+        <circle r="24" fill="var(--surface-2)" stroke="var(--gold)" stroke-width="1" />
+        <text x="0" y="5" text-anchor="middle" font-family="var(--font-body)" font-weight="700" font-size="14" fill="var(--gold)">I</text>
+        <circle cx="16" cy="-16" r="4.5" fill="var(--red)" stroke="var(--bg)" stroke-width="1.5" />
+      </g>
+      <text x="297.5" y="94" text-anchor="middle" class="seat-name" fill="var(--gold)" style="font-weight:700;">Ivy</text>
+
+      <!-- seat: Wren, theta 180 -->
+      <g transform="translate(50,190)">
+        <circle r="24" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5" />
+        <text x="0" y="5" text-anchor="middle" font-family="var(--font-body)" font-weight="700" font-size="14" fill="var(--fg)">W</text>
+        <circle cx="16" cy="-16" r="4.5" fill="var(--green)" stroke="var(--bg)" stroke-width="1.5" />
+      </g>
+      <text x="50" y="226" text-anchor="middle" class="seat-name">Wren</text>
+
+      <!-- seat: Nora, theta 0 -->
+      <g transform="translate(340,190)">
+        <circle r="24" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5" />
+        <text x="0" y="5" text-anchor="middle" font-family="var(--font-body)" font-weight="700" font-size="14" fill="var(--fg)">N</text>
+        <circle cx="16" cy="-16" r="4.5" fill="var(--amber)" stroke="var(--bg)" stroke-width="1.5" />
+      </g>
+      <text x="340" y="226" text-anchor="middle" class="seat-name">Nora</text>
+
+      <!-- seat: Miles, theta -90, OUT -->
+      <g transform="translate(195,105)" opacity="0.35">
+        <circle r="24" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5" />
+        <text x="0" y="5" text-anchor="middle" font-family="var(--font-body)" font-weight="700" font-size="14" fill="var(--fg)">M</text>
+      </g>
+      <text x="195" y="70" text-anchor="middle" class="seat-name" fill="var(--red)">Miles &middot; out</text>
+
+      <!-- seat: Owen, theta -135, disconnected -->
+      <g transform="translate(92.5,130)" opacity="0.6">
+        <circle r="24" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5" stroke-dasharray="3 3" />
+        <text x="0" y="5" text-anchor="middle" font-family="var(--font-body)" font-weight="700" font-size="14" fill="var(--fg)">O</text>
+      </g>
+      <text x="92.5" y="94" text-anchor="middle" class="seat-name">Owen</text>
+
+      <!-- seat: Ruby, theta 135 -->
+      <g transform="translate(92.5,250)">
+        <circle r="24" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5" />
+        <text x="0" y="5" text-anchor="middle" font-family="var(--font-body)" font-weight="700" font-size="14" fill="var(--fg)">R</text>
+        <circle cx="16" cy="-16" r="4.5" fill="var(--green)" stroke="var(--bg)" stroke-width="1.5" />
+      </g>
+      <text x="92.5" y="286" text-anchor="middle" class="seat-name">Ruby</text>
+
+      <!-- you: Cole, theta 90, bottom -->
+      <g transform="translate(195,275)">
+        <circle r="27" fill="var(--surface-2)" stroke="var(--gold)" stroke-width="2" />
+        <text x="0" y="6" text-anchor="middle" font-family="var(--font-body)" font-weight="700" font-size="15" fill="var(--gold)">C</text>
+        <circle cx="18" cy="-18" r="5" fill="var(--green)" stroke="var(--bg)" stroke-width="1.5" />
+      </g>
+      <text x="195" y="315" text-anchor="middle" class="seat-name you">Cole (you)</text>
+    </svg>
+  </div>
+
+  <!-- bottom: action chips only — target picked by tapping a seat -->
+  <div style="position:relative; padding:10px 16px 20px; border-top:1px solid var(--border);">
+    <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center;">
+      <div class="chip on">🗡️ Assassinate</div>
+      <div class="chip">💰 Bribe</div>
+      <div class="chip">🫳 Steal</div>
+      <div class="chip">🤝 Alliance</div>
+    </div>
+    <div style="margin-top:10px; font-size:12px; color:var(--muted); text-align:center;">Tap a seat at the table to choose your target</div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

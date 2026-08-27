@@ -1,0 +1,87 @@
+<!doctype html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: oklch(0.13 0.02 265);
+      --surface: oklch(0.21 0.025 265);
+      --surface-2: oklch(0.27 0.03 265);
+      --border: oklch(0.33 0.03 265);
+      --fg: oklch(0.95 0.01 90);
+      --muted: oklch(0.66 0.02 265);
+      --gold: oklch(0.78 0.14 85);
+      --gold-deep: oklch(0.68 0.14 80);
+      --ink: oklch(0.18 0.02 265);
+      --green: oklch(0.72 0.15 145);
+      --amber: oklch(0.78 0.14 85);
+      --red: oklch(0.62 0.19 25);
+      --font-display: 'Cinzel', Georgia, serif;
+      --font-body: 'Manrope', Helvetica, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    .pchip { display:flex; flex-direction:column; align-items:center; gap:4px; flex-shrink:0; }
+    .pchip .av { width:34px; height:34px; border-radius:50%; background:var(--surface-2); border:1.5px solid var(--border); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12.5px; position:relative; }
+    .pchip .dot { position:absolute; bottom:-1px; right:-1px; width:9px; height:9px; border-radius:50%; border:1.5px solid var(--bg); }
+    .pchip .nm { font-size:9.5px; color:var(--muted); }
+    .actbtn { width:100%; padding:16px; border-radius:16px; border:1.5px solid var(--border); background:var(--surface); color:var(--fg); font-family:var(--font-body); font-size:15px; font-weight:700; text-align:center; }
+    .actbtn.on { border-color:var(--gold); background:linear-gradient(180deg, oklch(0.78 0.14 85 / 0.22), oklch(0.78 0.14 85 / 0.08)); color:var(--gold); box-shadow: 0 0 0 1px oklch(0.78 0.14 85 / 0.3) inset; }
+  </style>
+</helmet>
+<div style="margin:0; width:390px; height:844px; background:var(--bg); font-family:var(--font-body); color:var(--fg); position:relative; overflow:hidden; border-radius:36px; display:flex; flex-direction:column;">
+
+  <div style="position:absolute; inset:0; background: radial-gradient(ellipse 420px 380px at 50% 30%, oklch(0.78 0.14 85 / 0.14), transparent 62%); pointer-events:none;"></div>
+  <div style="position:absolute; inset:0; background: radial-gradient(ellipse 300px 200px at 15% 90%, oklch(0.55 0.18 25 / 0.10), transparent 60%); pointer-events:none;"></div>
+
+  <!-- radial timer -->
+  <div style="position:relative; display:flex; flex-direction:column; align-items:center; padding-top:26px;">
+    <svg width="86" height="86" viewBox="0 0 86 86">
+      <circle cx="43" cy="43" r="37" fill="none" stroke="var(--border)" stroke-width="4" />
+      <circle cx="43" cy="43" r="37" fill="none" stroke="var(--red)" stroke-width="4" stroke-linecap="round"
+              stroke-dasharray="232.5" stroke-dashoffset="169" transform="rotate(-90 43 43)" />
+      <text x="43" y="40" text-anchor="middle" font-family="var(--font-display)" font-size="20" font-weight="700" fill="var(--fg)">12</text>
+      <text x="43" y="55" text-anchor="middle" font-family="var(--font-body)" font-size="9" fill="var(--muted)" letter-spacing="1">SECONDS</text>
+    </svg>
+    <div style="margin-top:10px; font-size:11px; color:var(--muted); letter-spacing:1.5px;">ROUND 2 OF 4 &middot; SECRET ACTIONS</div>
+  </div>
+
+  <!-- big event moment -->
+  <div style="position:relative; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:8px 34px;">
+    <div style="font-size:54px; filter: drop-shadow(0 0 22px oklch(0.78 0.14 85 / 0.35));">🚨</div>
+    <div style="font-family:var(--font-display); font-size:25px; font-weight:700; margin-top:14px; text-wrap:balance;">Conspiracy in the Palace</div>
+    <div style="margin-top:10px; font-size:14px; color:var(--muted); line-height:1.7;">Suspicious activity inside the kingdom! The court holds its breath &mdash; someone here means harm.</div>
+  </div>
+
+  <!-- player strip -->
+  <div style="position:relative; padding:0 16px 14px; display:flex; gap:10px; overflow-x:auto;">
+    <div class="pchip"><div class="av">C<div class="dot" style="background:var(--green);"></div></div><div class="nm">Cole (you)</div></div>
+    <div class="pchip"><div class="av">N<div class="dot" style="background:var(--amber);"></div></div><div class="nm">Nora</div></div>
+    <div class="pchip" style="opacity:0.4;"><div class="av">M</div><div class="nm">Miles</div></div>
+    <div class="pchip"><div class="av" style="border-color:var(--gold); box-shadow:0 0 0 2px oklch(0.78 0.14 85 / 0.3);">I<div class="dot" style="background:var(--red);"></div></div><div class="nm" style="color:var(--gold); font-weight:700;">Ivy</div></div>
+    <div class="pchip" style="opacity:0.6;"><div class="av">O</div><div class="nm">Owen</div></div>
+    <div class="pchip"><div class="av">R<div class="dot" style="background:var(--green);"></div></div><div class="nm">Ruby</div></div>
+    <div class="pchip"><div class="av">S<div class="dot" style="background:var(--amber);"></div></div><div class="nm">Silas</div></div>
+    <div class="pchip"><div class="av">W<div class="dot" style="background:var(--green);"></div></div><div class="nm">Wren</div></div>
+  </div>
+
+  <!-- big stacked actions -->
+  <div style="position:relative; padding:14px 20px 24px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:10px;">
+    <div class="actbtn on">🗡️ Assassinate &mdash; targeting Ivy</div>
+    <div style="display:flex; gap:10px;">
+      <div class="actbtn" style="font-size:13px; padding:12px;">💰 Bribe</div>
+      <div class="actbtn" style="font-size:13px; padding:12px;">🫳 Steal</div>
+      <div class="actbtn" style="font-size:13px; padding:12px;">🤝 Alliance</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
