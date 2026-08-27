@@ -23,18 +23,25 @@ change, not a rearchitecture, since the server side never dropped Arabic.
 
 ## Status
 
-This was written without a Flutter/Dart toolchain available in the build
-environment — there is no `flutter`/`dart` binary in this sandbox, so
-**none of this has been run, built, or analyzed**. The Dart source is
-believed syntactically correct (checked by hand + a bracket-balance pass),
-but treat it as an unverified skeleton, not a tested app, until someone
-runs the steps below on a real machine.
+Verified with a real Flutter 3.47.2 stable toolchain: `flutter analyze`
+reports no issues, `flutter test` passes (`test/widget_test.dart` — the
+app boots to the login screen, and the empty-name validation message
+shows up), and `flutter build web` compiles cleanly end to end. The
+`android/`, `ios/`, and `web/` platform scaffolding was generated via
+`flutter create --platforms=web,android,ios .` against the existing
+`lib/` and `pubspec.yaml` (which it left untouched); the default
+placeholder branding it adds (`web/index.html`, `web/manifest.json`,
+the Android app label) was updated to match the game. Not yet exercised:
+an actual on-device/emulator run, or a live run against the game server
+(no Android SDK, Chrome, or GTK dev libs were available to do either
+in the environment this was checked from).
 
 ## Running it for real
 
 ```bash
 flutter pub get
 flutter analyze
+flutter test
 flutter run --dart-define=SERVER_URL=http://<your-game-server-host>:3000
 ```
 
