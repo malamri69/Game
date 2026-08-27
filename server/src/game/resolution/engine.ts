@@ -25,6 +25,7 @@ const PRIORITY_ORDER: ActionRequest["actionId"][] = [
 
 const STEAL_SUCCESS_CHANCE = 0.5;
 const STEAL_AMOUNT = 30;
+const TRADE_SUCCESS_CHANCE = 0.7;
 const TRADE_GOLD_MIN = 30;
 const TRADE_GOLD_MAX = 70;
 const BRIBE_DEFAULT_GOLD = 20;
@@ -197,17 +198,22 @@ export class ResolutionEngine {
 
           case "trade": {
             if (!target) break;
-            const gained = this.rng.int(TRADE_GOLD_MIN, TRADE_GOLD_MAX + 1);
-            actor.resources.gold += gained;
-            bump(ctx.successfulTradesBySeat, actor.seatId);
-            events.push({
-              round,
-              type: "trade_success",
-              actorSeatId: actor.seatId,
-              targetSeatId: target.seatId,
-              visibleTo: [actor.seatId, target.seatId],
-              description: { ar: "⚔️ تمت صفقة تجارية بنجاح!", en: "⚔️ A trade deal went through!" }
-            });
+            // Not every deal closes — see balance simulator notes in
+            // docs/TECHNICAL_PLAN.md: an unconditional trade made the
+            // Merchant's win condition trivially easy to reach.
+            if (this.rng.int(0, 100) < TRADE_SUCCESS_CHANCE * 100) {
+              const gained = this.rng.int(TRADE_GOLD_MIN, TRADE_GOLD_MAX + 1);
+              actor.resources.gold += gained;
+              bump(ctx.successfulTradesBySeat, actor.seatId);
+              events.push({
+                round,
+                type: "trade_success",
+                actorSeatId: actor.seatId,
+                targetSeatId: target.seatId,
+                visibleTo: [actor.seatId, target.seatId],
+                description: { ar: "⚔️ تمت صفقة تجارية بنجاح!", en: "⚔️ A trade deal went through!" }
+              });
+            }
             break;
           }
 

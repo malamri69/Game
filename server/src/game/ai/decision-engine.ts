@@ -7,7 +7,12 @@ import type { AIKnowledge } from "./knowledge.js";
 import { PERSONALITY_PROFILES, isRiskyAction, type PersonalityProfile } from "./personalities.js";
 
 const OPEN_ACTION_IDS = ["bribe", "steal", "form_alliance"] as const;
-const HOSTILE_TARGET_ACTIONS = new Set(["attack", "sabotage", "investigate", "spy", "steal"]);
+/** Actions whose target is picked by chasing suspicion rather than avoiding
+ * it. "protect" belongs here too: a Guardian should shield whoever looks
+ * most under threat — the same seat a Traitor is most likely to go for —
+ * not whichever stranger happens to look friendliest. That overlap is what
+ * gives protection a real chance of actually blocking an attack. */
+const SUSPICION_SEEKING_ACTIONS = new Set(["attack", "sabotage", "investigate", "spy", "steal", "protect"]);
 const BRIBE_OFFER = 25;
 
 /**
@@ -36,8 +41,10 @@ export class AIDecisionEngine {
       const actionDef = getAction(actionId);
       if (actionDef.restrictedToRoleId && actionDef.restrictedToRoleId !== knowledge.roleId) continue;
 
+      const isOwnAbility = actionId === role.abilityActionId;
+
       if (!actionDef.requiresTarget) {
-        const score = this.scoreCandidate(actionId, self.seatId, self.seatId, knowledge, profile);
+        const score = this.scoreCandidate(actionId, self.seatId, self.seatId, knowledge, profile, isOwnAbility);
         if (!best || score > best.score) best = { actionId, score };
         continue;
       }
@@ -46,7 +53,7 @@ export class AIDecisionEngine {
         if (target.seatId === self.seatId && !actionDef.allowsSelfTarget) continue;
         if (actionId === "protect" && target.seatId === knowledge.lastProtectedSeatId) continue;
 
-        const score = this.scoreCandidate(actionId, target.seatId, self.seatId, knowledge, profile);
+        const score = this.scoreCandidate(actionId, target.seatId, self.seatId, knowledge, profile, isOwnAbility);
         if (!best || score > best.score) best = { actionId, targetSeatId: target.seatId, score };
       }
     }
@@ -76,22 +83,36 @@ export class AIDecisionEngine {
     targetSeatId: string,
     selfSeatId: string,
     knowledge: AIKnowledge,
-    profile: PersonalityProfile
+    profile: PersonalityProfile,
+    isOwnAbility: boolean
   ): number {
     const baseWeight = profile.actionWeights[actionId] ?? 1.0;
 
+    // Both branches start from the same 0.2 floor and the same 0.6 swing,
+    // so "nobody's under suspicion yet" doesn't structurally starve every
+    // role's own ability in favor of generic social actions the way an
+    // asymmetric 0.2-vs-0.65 baseline used to (see git history/balance
+    // simulator: that bug meant Traitor/Guardian/Investigator/Spy almost
+    // never used their ability, so King/Citizen/Commander won ~100% of
+    // matches just by nobody ever threatening them).
     let targetScore = 0.5;
     if (targetSeatId !== selfSeatId) {
       const suspicion = knowledge.suspicion.get(targetSeatId) ?? 20;
       const relationship = knowledge.relationships.get(targetSeatId) ?? 0;
-      targetScore = HOSTILE_TARGET_ACTIONS.has(actionId)
-        ? suspicion / 100
-        : (100 - suspicion) / 200 + (relationship + 100) / 400;
+      targetScore = SUSPICION_SEEKING_ACTIONS.has(actionId)
+        ? 0.2 + (suspicion / 100) * 0.6
+        : 0.2 + ((100 - suspicion) / 200 + (relationship + 100) / 400) * 0.6;
     }
 
-    const riskFactor = isRiskyAction(actionId) ? 0.4 + profile.riskTolerance * 0.6 : 1.0;
+    const riskFactor = isRiskyAction(actionId) ? 0.5 + profile.riskTolerance * 0.5 : 1.0;
+    // A bot has a personal stake in the one power that's actually theirs —
+    // this is what makes an Investigator investigate, a Guardian protect,
+    // and a Traitor eventually swing at someone instead of everyone
+    // defaulting to safe small talk forever (section 5: bots must act on
+    // their role, not just vibes).
+    const abilityBonus = isOwnAbility ? 1.6 : 1.0;
     const jitterNoise = ((this.rng.int(0, 2001) - 1000) / 1000) * profile.jitter;
 
-    return baseWeight * (0.3 + targetScore) * riskFactor + jitterNoise;
+    return baseWeight * abilityBonus * (0.3 + targetScore) * riskFactor + jitterNoise;
   }
 }

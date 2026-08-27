@@ -95,11 +95,13 @@ describe("win conditions", () => {
     expect(getRole("traitor").evaluateWin({ ...baseCtx, traitorAchievedGoal: true }, "seat-1")).toBe(true);
   });
 
-  it("merchant wins on 500 gold OR two successful trades, not requiring both", () => {
+  it("merchant wins on 500 gold OR three successful trades, not requiring both", () => {
     const byGold = { ...baseCtx, goldBySeat: new Map([["seat-1", 500]]) };
-    const byTrades = { ...baseCtx, successfulTradesBySeat: new Map([["seat-1", 2]]) };
+    const byTrades = { ...baseCtx, successfulTradesBySeat: new Map([["seat-1", 3]]) };
+    const tooFewTrades = { ...baseCtx, successfulTradesBySeat: new Map([["seat-1", 2]]) };
     expect(getRole("merchant").evaluateWin(byGold, "seat-1")).toBe(true);
     expect(getRole("merchant").evaluateWin(byTrades, "seat-1")).toBe(true);
+    expect(getRole("merchant").evaluateWin(tooFewTrades, "seat-1")).toBe(false);
     expect(getRole("merchant").evaluateWin(baseCtx, "seat-1")).toBe(false);
   });
 });

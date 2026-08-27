@@ -11,8 +11,8 @@ class FixedRng extends SecureRng {
   constructor(private readonly fixed: number) {
     super();
   }
-  override int(): number {
-    return this.fixed;
+  override int(min: number, max: number): number {
+    return Math.max(min, Math.min(max - 1, this.fixed));
   }
 }
 
@@ -138,15 +138,26 @@ describe("ResolutionEngine", () => {
     expect(thief.resources.reputation).toBe(-1);
   });
 
-  it("increments successfulTradesBySeat on a merchant trade", () => {
+  it("increments successfulTradesBySeat on a successful trade (rng forced low)", () => {
     const merchant = player("merchant", "merchant");
     const other = player("other", "citizen");
     const players = seatMap([merchant, other]);
     const ctx = createResolutionContext("king");
-    const engine = new ResolutionEngine(new SecureRng());
+    const engine = new ResolutionEngine(new FixedRng(0));
     engine.resolve(1, [{ seatId: merchant.seatId, actionId: "trade", targetSeatId: other.seatId, submittedAt: 0 }], players, ctx);
     expect(ctx.successfulTradesBySeat.get(merchant.seatId)).toBe(1);
     expect(merchant.resources.gold).toBeGreaterThan(100);
+  });
+
+  it("a trade can fail to close, leaving gold and the trade counter untouched (rng forced high)", () => {
+    const merchant = player("merchant", "merchant");
+    const other = player("other", "citizen");
+    const players = seatMap([merchant, other]);
+    const ctx = createResolutionContext("king");
+    const engine = new ResolutionEngine(new FixedRng(99));
+    engine.resolve(1, [{ seatId: merchant.seatId, actionId: "trade", targetSeatId: other.seatId, submittedAt: 0 }], players, ctx);
+    expect(ctx.successfulTradesBySeat.get(merchant.seatId) ?? 0).toBe(0);
+    expect(merchant.resources.gold).toBe(100);
   });
 
   it("moves gold on bribe and dents the briber's reputation", () => {

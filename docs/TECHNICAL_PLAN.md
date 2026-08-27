@@ -126,6 +126,48 @@ Each bot holds a private `AIKnowledge` model (Known Facts, Suspicions, Beliefs, 
 
 Single Docker Compose stack for now: `game-server`, `postgres`. `docker-compose.yml` + `.env.example` at repo root. Documented in `README.md`'s Deployment section as it lands.
 
+## 9b. Balance Simulator Findings (section 63/64, first pass)
+
+`npm run simulate -- 10000 8` runs 10,000 bots-only 8-player matches through
+the same `MatchManager` a real match uses and reports win rate by role.
+First run surfaced two real bugs, both fixed in the engine itself (not
+special-cased for the simulator):
+
+1. **Hidden-identity leak suppressed every role ability.** The AI utility
+   scorer's "friendly" target formula started from a much higher baseline
+   than its "hostile" one, so generic social actions (bribe/alliance)
+   out-scored every role's own ability by default — even an "aggressive"
+   Traitor would bribe instead of attack. Fixed by giving a bot's own role
+   ability a structural bonus and putting `protect` on the same
+   suspicion-seeking curve as `attack`/`investigate` (a Guardian should
+   shield whoever looks threatened, the same seat a Traitor is drawn to —
+   that overlap is what lets protection actually block something).
+2. **Merchant's `trade` always succeeded**, making 500 gold / 3 trades
+   trivial. Added a 70% success chance, same shape as `steal`.
+
+After both fixes (10k matches, 8 players):
+
+| Role | Win rate |
+|---|---|
+| King / Citizen / Commander | 91.7% (all three share the "king survives" condition) |
+| Traitor | 8.3% |
+| Guardian | 2.4% |
+| Investigator | 34.2% |
+| Spy | 35.1% |
+| Merchant | 35.4% |
+
+Merchant/Investigator/Spy landed in a healthy band. King/Citizen/Commander
+and Traitor/Guardian are still linked and skewed: the Traitor doesn't know
+the King's identity by design (section 6) and today's bots have no
+chat-based deduction to narrow it down, so they rarely land an attack on
+the actual King — which is also why Guardian rarely gets a block credit.
+This is a **known, tracked balance item**, not a silent gap: a real fix
+needs either a smarter deduction heuristic (e.g. weighting "who benefits
+from royal orders over time" as a weak king-tell) or human playtest data,
+which a bots-only simulator can't fully substitute for. Re-running
+`npm run simulate` after any AI or economy change is the way to check this
+number, not intuition.
+
 ## 10. Build Order (this repo follows section 71 literally)
 
 Phase 1 Architecture (this doc) → Phase 2 Core Engine & State Machine → Phase 3 Roles → Phase 4 Events → Phase 5 Actions → Phase 6 Voting → Phase 7 AI → Phase 8 Realtime Multiplayer → Phase 9 UI (Flutter) → Phase 10 Matchmaking → Phase 11 Testing → Phase 12 Balancing → Phase 13 Polish.

@@ -58,11 +58,11 @@ export const ROLE_CATALOG: Record<string, RoleDefinition> = {
     id: "merchant",
     name: { ar: "التاجر", en: "The Merchant" },
     faction: "neutral",
-    objective: { ar: "اجمع 500 ذهب أو نفّذ صفقتين ناجحتين.", en: "Amass 500 Gold or complete two successful trades." },
+    objective: { ar: "اجمع 500 ذهب أو نفّذ 3 صفقات ناجحة.", en: "Amass 500 Gold or complete three successful trades." },
     abilityDescription: { ar: "اعقد صفقة مع لاعب آخر كل جولة.", en: "Strike a deal with another player each round." },
     abilityActionId: "trade",
     evaluateWin: (ctx, seatId) =>
-      (ctx.goldBySeat.get(seatId) ?? 0) >= 500 || (ctx.successfulTradesBySeat.get(seatId) ?? 0) >= 2
+      (ctx.goldBySeat.get(seatId) ?? 0) >= 500 || (ctx.successfulTradesBySeat.get(seatId) ?? 0) >= 3
   },
   spy: {
     id: "spy",
