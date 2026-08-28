@@ -35,6 +35,7 @@ class AppStrings {
   String get secretIntel => 'Secret intel 🤫';
   String round(int r, int total) => 'Round $r/$total';
   String get pickATarget => 'Pick a target:';
+  String get tapASeatToTarget => 'Tap a seat at the table to choose your target';
   String get typeAMessage => 'Type a message…';
 
   static const _phaseLabels = {

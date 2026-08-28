@@ -104,6 +104,7 @@ class MatchStateForViewer {
   final int round;
   final int totalRounds;
   final int? remainingMs;
+  final String viewerSeatId;
   final List<PublicPlayerView> players;
   final OwnRole? ownRole;
   final LocalizedText? ownSecretInfo;
@@ -116,6 +117,7 @@ class MatchStateForViewer {
     required this.round,
     required this.totalRounds,
     required this.remainingMs,
+    required this.viewerSeatId,
     required this.players,
     required this.ownRole,
     required this.ownSecretInfo,
@@ -129,6 +131,7 @@ class MatchStateForViewer {
         round: json['round'] as int,
         totalRounds: json['totalRounds'] as int,
         remainingMs: json['remainingMs'] as int?,
+        viewerSeatId: json['viewerSeatId'] as String? ?? '',
         players: (json['players'] as List<dynamic>? ?? [])
             .map((p) => PublicPlayerView.fromJson(p as Map<String, dynamic>))
             .toList(),

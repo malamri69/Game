@@ -56,6 +56,10 @@ export interface MatchStateForViewer {
   round: number;
   totalRounds: number;
   remainingMs: number | null;
+  /** Which entry in `players` is this viewer's own seat — a client has no
+   * other way to tell (section 32: everything else in this payload is
+   * symmetric across viewers). */
+  viewerSeatId: string;
   players: PublicPlayerView[];
   /** Present only once role assignment has run, and only for the viewer's own seat. */
   ownRole?: PublicRoleView;
@@ -82,6 +86,7 @@ export function buildMatchStateForViewer(manager: MatchManager, seatId: string, 
     round: match.round,
     totalRounds: match.totalRounds,
     remainingMs: manager.stateMachine.remainingMs(manager.timers, now),
+    viewerSeatId: seatId,
     players: match.players.map(toPublicPlayerView),
     ownRole: viewer?.roleId ? ownRoleView(viewer) : undefined,
     ownSecretInfo: manager.getSecretInfo(seatId),

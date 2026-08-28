@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../l10n/app_strings.dart';
 import '../models/match_state.dart';
 import '../services/socket_service.dart';
-import '../widgets/player_card.dart';
+import '../widgets/match_table.dart';
 import 'result_screen.dart';
 
 const _s = AppStrings();
@@ -22,6 +22,11 @@ class _MatchScreenState extends State<MatchScreen> {
   late final StreamSubscription _stateSub;
   late final StreamSubscription _chatSub;
 
+  /// Which action chip is armed, waiting for a seat tap to supply its
+  /// target. Lives here (not in _BottomPanel) because the table — up in
+  /// _MiddleContent — needs it too, to know whether seats are tappable.
+  String? _selectedActionId;
+
   @override
   void initState() {
     super.initState();
@@ -33,10 +38,21 @@ class _MatchScreenState extends State<MatchScreen> {
 
   void _onState(MatchStateForViewer state) {
     if (!mounted) return;
-    setState(() => _state = state);
+    final phaseChanged = _state?.state != state.state;
+    setState(() {
+      _state = state;
+      if (phaseChanged) _selectedActionId = null;
+    });
     if ((state.state == 'REVEAL' || state.state == 'REWARDS') && state.result != null) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (_) => ResultScreen(state: state)));
     }
+  }
+
+  void _onSeatTap(String seatId) {
+    final actionId = _selectedActionId;
+    if (actionId == null) return;
+    SocketService.instance.submitAction(actionId, targetSeatId: seatId);
+    setState(() => _selectedActionId = null);
   }
 
   @override
@@ -60,11 +76,19 @@ class _MatchScreenState extends State<MatchScreen> {
           children: [
             _TopBar(state: state),
             const Divider(height: 1),
-            Expanded(child: _MiddleContent(state: state)),
+            Expanded(
+              child: _MiddleContent(
+                state: state,
+                selectedActionId: _selectedActionId,
+                onSeatTap: _onSeatTap,
+              ),
+            ),
             _BottomPanel(
               state: state,
               chat: _chat,
               chatController: _chatController,
+              selectedActionId: _selectedActionId,
+              onSelectAction: (id) => setState(() => _selectedActionId = id),
               onSendChat: () {
                 final text = _chatController.text.trim();
                 if (text.isEmpty) return;
@@ -103,7 +127,9 @@ class _TopBar extends StatelessWidget {
 
 class _MiddleContent extends StatelessWidget {
   final MatchStateForViewer state;
-  const _MiddleContent({required this.state});
+  final String? selectedActionId;
+  final void Function(String seatId) onSeatTap;
+  const _MiddleContent({required this.state, required this.selectedActionId, required this.onSeatTap});
 
   @override
   Widget build(BuildContext context) {
@@ -115,11 +141,13 @@ class _MiddleContent extends StatelessWidget {
           if (state.state == 'ROLE_REVEAL' && state.ownRole != null) _RoleReveal(state: state),
           if (state.currentEvent != null && state.state != 'ROLE_REVEAL') _EventCard(event: state.currentEvent!),
           const SizedBox(height: 16),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            alignment: WrapAlignment.center,
-            children: state.players.map((p) => PlayerCard(player: p)).toList(),
+          Center(
+            child: MatchTable(
+              players: state.players,
+              selfSeatId: state.viewerSeatId,
+              selectable: state.state == 'SECRET_ACTIONS' && selectedActionId != null,
+              onSeatTap: onSeatTap,
+            ),
           ),
         ],
       ),
@@ -182,24 +210,25 @@ class _EventCard extends StatelessWidget {
   }
 }
 
-class _BottomPanel extends StatefulWidget {
+class _BottomPanel extends StatelessWidget {
   final MatchStateForViewer state;
   final List<Map<String, dynamic>> chat;
   final TextEditingController chatController;
+  final String? selectedActionId;
+  final void Function(String? actionId) onSelectAction;
   final VoidCallback onSendChat;
 
-  const _BottomPanel({required this.state, required this.chat, required this.chatController, required this.onSendChat});
-
-  @override
-  State<_BottomPanel> createState() => _BottomPanelState();
-}
-
-class _BottomPanelState extends State<_BottomPanel> {
-  String? _selectedActionId;
+  const _BottomPanel({
+    required this.state,
+    required this.chat,
+    required this.chatController,
+    required this.selectedActionId,
+    required this.onSelectAction,
+    required this.onSendChat,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final state = widget.state;
     if (state.state == 'VOTING' || state.state == 'FINAL_DECISION') {
       return _buildVoting(state);
     }
@@ -250,30 +279,14 @@ class _BottomPanelState extends State<_BottomPanel> {
             children: availableActions
                 .map((a) => ChoiceChip(
                       label: Text(a.value),
-                      selected: _selectedActionId == a.key,
-                      onSelected: (_) => setState(() => _selectedActionId = a.key),
+                      selected: selectedActionId == a.key,
+                      onSelected: (selected) => onSelectAction(selected ? a.key : null),
                     ))
                 .toList(),
           ),
-          if (_selectedActionId != null) ...[
+          if (selectedActionId != null) ...[
             const SizedBox(height: 8),
-            Text(_s.pickATarget, style: const TextStyle(color: Colors.grey)),
-            const SizedBox(height: 4),
-            Wrap(
-              spacing: 6,
-              runSpacing: 6,
-              alignment: WrapAlignment.center,
-              children: state.players
-                  .where((p) => p.alive)
-                  .map((p) => ActionChip(
-                        label: Text(p.displayName),
-                        onPressed: () {
-                          SocketService.instance.submitAction(_selectedActionId!, targetSeatId: p.seatId);
-                          setState(() => _selectedActionId = null);
-                        },
-                      ))
-                  .toList(),
-            ),
+            Text(_s.tapASeatToTarget, textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
           ],
         ],
       ),
@@ -302,14 +315,14 @@ class _BottomPanelState extends State<_BottomPanel> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (widget.chat.isNotEmpty)
+          if (chat.isNotEmpty)
             SizedBox(
               height: 100,
               child: ListView.builder(
                 reverse: true,
-                itemCount: widget.chat.length,
+                itemCount: chat.length,
                 itemBuilder: (context, i) {
-                  final msg = widget.chat[widget.chat.length - 1 - i];
+                  final msg = chat[chat.length - 1 - i];
                   return Text('${msg['seatId']}: ${msg['text']}', style: const TextStyle(fontSize: 13));
                 },
               ),
@@ -318,12 +331,12 @@ class _BottomPanelState extends State<_BottomPanel> {
             children: [
               Expanded(
                 child: TextField(
-                  controller: widget.chatController,
+                  controller: chatController,
                   decoration: InputDecoration(hintText: _s.typeAMessage, border: const OutlineInputBorder()),
-                  onSubmitted: (_) => widget.onSendChat(),
+                  onSubmitted: (_) => onSendChat(),
                 ),
               ),
-              IconButton(icon: const Icon(Icons.send), onPressed: widget.onSendChat),
+              IconButton(icon: const Icon(Icons.send), onPressed: onSendChat),
             ],
           ),
         ],

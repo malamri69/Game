@@ -43,6 +43,7 @@ describe("buildMatchStateForViewer", () => {
     const viewerSeatId = players[0]!.seatId;
     const view = buildMatchStateForViewer(manager, viewerSeatId);
 
+    expect(view.viewerSeatId).toBe(viewerSeatId);
     expect(view.ownRole).toBeDefined();
     expect(view.ownRole!.roleId).toBe(manager.match.players.find((p) => p.seatId === viewerSeatId)!.roleId);
 
